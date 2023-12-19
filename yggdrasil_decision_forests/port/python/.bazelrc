@@ -1,0 +1,77 @@
+# Bazel configuration for Yggdrasil Decision Forests
+
+# Common flags.
+common --experimental_repo_remote_exec
+
+# On Windows, uncomment the next line to solve long path issues:
+# startup --output_user_root=C:/tmpbld
+
+build -c opt
+build --announce_rc
+
+# Enable after adding python headers to protobuf.
+build --define=use_fast_cpp_protos=true
+build --define=allow_oversize_protos=true
+build --define=grpc_no_ares=true
+
+# Do not dependent on TF for protobuffers
+build --define=use_ydf_tensorflow_proto=1
+
+# Nice print
+build:linux --copt=-fdiagnostics-color=always
+build --color=yes
+
+# Suppress C++ compiler warnings.
+build:linux --copt=-w
+build:linux --host_copt=-w
+build:macos --copt=-w
+build:windows --copt=/W0
+
+# Build mode.
+build:linux_cpp17 --cxxopt=-std=c++17
+build:linux_cpp17 --host_cxxopt=-std=c++17
+build:linux_cpp17 --config=linux
+
+build:macos --cxxopt=-std=c++17
+build:macos --host_cxxopt=-std=c++17
+
+build:windows_cpp20 --cxxopt=/std:c++20
+build:windows_cpp20 --host_cxxopt=/std:c++20
+build:windows_cpp20 --config=windows
+
+# Instruction set optimizations
+build:linux_avx2 --copt=-mavx2
+build:windows_avx2 --copt=/arch:AVX2
+
+# Misc build options we need for windows.
+build:windows --copt=/Zc:__cplusplus
+build:windows --host_copt=/Zc:__cplusplus
+build:windows --copt=/D_USE_MATH_DEFINES
+build:windows --host_copt=/D_USE_MATH_DEFINES
+build:windows --copt=-DWIN32_LEAN_AND_MEAN
+build:windows --host_copt=-DWIN32_LEAN_AND_MEAN
+build:windows --copt=-DNOGDI
+build:windows --host_copt=-DNOGDI
+build:windows --linkopt=/NDEBUG
+build:windows --host_linkopt=/NDEBUG
+# Eliminates functions never referenced
+build:windows --linkopt=/OPT:REF
+build:windows --host_linkopt=/OPT:REF
+# Redundant COMDATs
+build:windows --linkopt=/OPT:ICF
+build:windows --host_linkopt=/OPT:ICF
+# Enable preprocessor conformance mode
+build:windows --copt=/Zc:preprocessor
+build:windows --host_copt=/Zc:preprocessor
+ # Generate Intrinsic Functions
+build:windows --copt=/Oi
+build:windows --host_copt=/Oi
+ # Whole program optimization (not for tooling)
+build:windows --copt=/GL
+# Enable Function-Level Linking
+build:windows --copt=/Gy
+build:windows --host_copt=/Gy
+build:windows --materialize_param_files
+build:windows --features=compiler_param_file
+build:windows --verbose_failures
+build:windows --experimental_strict_action_env=true

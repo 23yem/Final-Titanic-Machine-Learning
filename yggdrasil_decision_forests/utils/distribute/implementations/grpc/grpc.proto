@@ -1,0 +1,122 @@
+/*
+ * Copyright 2022 Google LLC.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+syntax = "proto2";
+
+package yggdrasil_decision_forests.distribute.proto;
+
+import "yggdrasil_decision_forests/utils/distribute/distribute.proto";
+
+// Computation distribution over multiple jobs communicating over GRPC. A worker
+// in an instance of ":grpc_worker_main"/
+message GRPCImp {
+  oneof worker_address {
+    SocketAddresses socket_addresses = 1;
+    Bns bns = 2;
+    GrpcAddresses grpc_addresses = 5;
+  }
+
+  optional bool use_loas = 3 [default = false];
+
+  // Optional global identifier of the distribute session (shared among the
+  // manager and the workers). Useful to differentiate between multiple
+  // distribute sessions running in the same process.
+  //
+  // At a given time, only one manager can be instantiated with the same key in
+  // a given process. Note that many managers can be instantiated without a key.
+  optional int32 key = 4;
+}
+
+message GrpcAddresses {
+  // Address of the workers.
+  //
+  // Example: "127.0.0.1:2345".
+  // See https://grpc.github.io/grpc/cpp/md_doc_naming.html for the supported
+  // formats.
+  repeated string addresses = 1;
+}
+
+extend Config {
+  optional GRPCImp grpc = 1001;
+}
+
+// Configuration of the workers.
+message WorkerConfig {
+  // Welcome message.
+  optional bytes welcome_blob = 1;
+  // Addresses of the workers.
+  repeated string worker_addresses = 2;
+  // Unique ID of the manager.
+  optional uint64 manager_uid = 3;
+  // Job done by the worker.
+  optional string worker_name = 4;
+  // "parallel_execution_per_worker" parameter of the manager. How many request
+  // can a worker process in parallel.
+  optional int32 parallel_execution_per_worker = 5;
+}
+
+// GRPC service.
+service Server {
+  rpc Run(Query) returns (Answer) {
+    // [AUTOMATION]: Internal rpc option goes here.
+  }
+  rpc WorkerRun(WorkerQuery) returns (WorkerAnswer) {
+    // [AUTOMATION]: Internal rpc option goes here.
+  }
+  rpc Shutdown(ShutdownQuery) returns (Empty) {
+    // [AUTOMATION]: Internal rpc option goes here.
+  }
+  rpc Ping(Empty) returns (Empty) {
+    // [AUTOMATION]: Internal rpc option goes here.
+  }
+  rpc UpdateWorkerAddress(UpdateWorkerAddressQuery) returns (Empty) {
+    // [AUTOMATION]: Internal rpc option goes here.
+  }
+}
+
+message Query {
+  optional bytes blob = 1;
+  optional uint64 manager_uid = 3;
+  optional int32 worker_idx = 4;
+  optional WorkerConfig worker_config = 5;
+
+  reserved 2;
+}
+
+message Answer {
+  optional bytes blob = 1;
+  optional string error = 2;
+}
+
+message ShutdownQuery {
+  optional bool kill_worker_manager = 1;
+}
+
+message WorkerQuery {
+  optional bytes blob = 1;
+  optional uint64 manager_uid = 3;
+}
+
+message WorkerAnswer {
+  optional bytes blob = 1;
+  optional string error = 2;
+}
+
+message UpdateWorkerAddressQuery {
+  optional int32 worker_idx = 1;
+  optional string new_address = 2;
+}
+
+message Empty {}

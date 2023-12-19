@@ -1,0 +1,510 @@
+/*
+ * Copyright 2022 Google LLC.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+#include "yggdrasil_decision_forests/model/random_forest/random_forest.h"
+
+#include <memory>
+#include <string>
+#include <vector>
+
+#include "gmock/gmock.h"
+#include "gtest/gtest.h"
+#include "absl/container/node_hash_set.h"
+#include "absl/memory/memory.h"
+#include "absl/status/status.h"
+#include "yggdrasil_decision_forests/dataset/data_spec.pb.h"
+#include "yggdrasil_decision_forests/dataset/example.pb.h"
+#include "yggdrasil_decision_forests/dataset/vertical_dataset.h"
+#include "yggdrasil_decision_forests/dataset/vertical_dataset_io.h"
+#include "yggdrasil_decision_forests/metric/metric.pb.h"
+#include "yggdrasil_decision_forests/model/abstract_model.h"
+#include "yggdrasil_decision_forests/model/abstract_model.pb.h"
+#include "yggdrasil_decision_forests/model/decision_tree/decision_tree.h"
+#include "yggdrasil_decision_forests/model/decision_tree/decision_tree.pb.h"
+#include "yggdrasil_decision_forests/model/model_library.h"
+#include "yggdrasil_decision_forests/model/prediction.pb.h"
+#include "yggdrasil_decision_forests/utils/filesystem.h"
+#include "yggdrasil_decision_forests/utils/logging.h"
+#include "yggdrasil_decision_forests/utils/test.h"
+#include "yggdrasil_decision_forests/utils/uid.h"
+
+namespace yggdrasil_decision_forests {
+namespace model {
+namespace random_forest {
+namespace {
+
+using ::yggdrasil_decision_forests::test::EqualsProto;
+using ::yggdrasil_decision_forests::test::StatusIs;
+
+std::string TestDataDir() {
+  return file::JoinPath(test::DataRootDirectory(),
+                        "yggdrasil_decision_forests/test_data");
+}
+
+// Build a forest with two decision trees as follow:
+// [a>1]
+//   ├── [b=0] (pos)
+//   └── [b=1] (neg)
+// [a>3]
+//   ├── [b=2] (pos)
+//   └── [b=1] (neg)
+//
+// Build the dataset:
+// "a" : {0, 2, 4}
+// "b" : {1, 2, 1}
+void BuildToyModelAndToyDataset(const model::proto::Task task,
+                                RandomForestModel* model,
+                                dataset::VerticalDataset* dataset) {
+  dataset::proto::DataSpecification dataspec = PARSE_TEST_PROTO(R"pb(
+    columns { type: NUMERICAL name: "a" }
+    columns {
+      type: CATEGORICAL
+      name: "b"
+      categorical { is_already_integerized: true number_of_unique_values: 3 }
+    }
+  )pb");
+
+  dataset->set_data_spec(dataspec);
+  CHECK_OK(dataset->CreateColumnsFromDataspec());
+  auto* col_1 = dataset
+                    ->MutableColumnWithCastWithStatus<
+                        dataset::VerticalDataset::NumericalColumn>(0)
+                    .value();
+  col_1->Add(0);
+  col_1->Add(2);
+  col_1->Add(4);
+
+  auto* col_2 = dataset
+                    ->MutableColumnWithCastWithStatus<
+                        dataset::VerticalDataset::CategoricalColumn>(1)
+                    .value();
+  col_2->Add(1);
+  col_2->Add(2);
+  col_2->Add(1);
+  dataset->set_nrow(3);
+
+  // Create a tree of the form.
+  // [a> alpha]
+  //   ├── [b=beta]
+  //   └── [b=gamma]
+  auto create_tree = [&task](const float alpha, const int beta,
+                             const int gamma) {
+    auto tree = absl::make_unique<decision_tree::DecisionTree>();
+    tree->CreateRoot();
+    tree->mutable_root()->CreateChildren();
+    tree->mutable_root()->mutable_node()->mutable_condition()->set_attribute(0);
+    tree->mutable_root()
+        ->mutable_node()
+        ->mutable_condition()
+        ->mutable_condition()
+        ->mutable_higher_condition()
+        ->set_threshold(alpha);
+    tree->mutable_root()
+        ->mutable_node()
+        ->set_num_pos_training_examples_without_weight(10);
+
+    auto* pos_child = tree->mutable_root()->mutable_pos_child()->mutable_node();
+    auto* neg_child = tree->mutable_root()->mutable_neg_child()->mutable_node();
+
+    pos_child->set_num_pos_training_examples_without_weight(8);
+    neg_child->set_num_pos_training_examples_without_weight(2);
+
+    switch (task) {
+      case model::proto::Task::CLASSIFICATION:
+        pos_child->mutable_classifier()->set_top_value(beta);
+        neg_child->mutable_classifier()->set_top_value(gamma);
+        pos_child->mutable_classifier()
+            ->mutable_distribution()
+            ->mutable_counts()
+            ->Resize(3, 1);
+        neg_child->mutable_classifier()
+            ->mutable_distribution()
+            ->mutable_counts()
+            ->Resize(3, 1);
+        break;
+      case model::proto::Task::REGRESSION:
+        pos_child->mutable_regressor()->set_top_value(beta);
+        neg_child->mutable_regressor()->set_top_value(gamma);
+        break;
+      default:
+        CHECK(false);
+    }
+    return tree;
+  };
+
+  model->set_node_format("BLOB_SEQUENCE");
+  model->AddTree(create_tree(1, 0, 1));
+  model->AddTree(create_tree(3, 2, 1));
+
+  model->set_task(task);
+  switch (task) {
+    case model::proto::Task::CLASSIFICATION:
+      model->set_label_col_idx(1);
+      break;
+    case model::proto::Task::REGRESSION:
+      // This test uses the same column as input and label. Note that this might
+      // no longer work in the future, at which point this test will be
+      // updated.
+      model->set_label_col_idx(0);
+      break;
+    default:
+      CHECK(false);
+  }
+  model->set_data_spec(dataspec);
+  auto* metadata = model->mutable_metadata();
+  metadata->set_uid(utils::GenUniqueIdUint64());
+}
+
+TEST(DecisionTree, CountFeatureUsage) {
+  RandomForestModel model;
+  dataset::VerticalDataset dataset;
+  BuildToyModelAndToyDataset(model::proto::Task::CLASSIFICATION, &model,
+                             &dataset);
+  std::unordered_map<int32_t, int64_t> feature_usage;
+  model.CountFeatureUsage(&feature_usage);
+
+  EXPECT_EQ(feature_usage.size(), 1);
+  EXPECT_EQ(feature_usage[0], 2);
+}
+
+TEST(DecisionTree, CallOnAllLeafs) {
+  RandomForestModel model;
+  dataset::VerticalDataset dataset;
+  BuildToyModelAndToyDataset(model::proto::Task::CLASSIFICATION, &model,
+                             &dataset);
+  int num_calls = 0;
+  model.CallOnAllLeafs(dataset, 1, [&](const decision_tree::proto::Node& node) {
+    EXPECT_TRUE(
+        &node == &model.decision_trees()[0]->root().pos_child()->node() ||
+        &node == &model.decision_trees()[1]->root().neg_child()->node());
+    num_calls++;
+  });
+  EXPECT_EQ(num_calls, 2);
+}
+
+TEST(DecisionTree, PredictClassification) {
+  RandomForestModel model;
+  dataset::VerticalDataset dataset;
+  model::proto::Prediction prediction;
+  BuildToyModelAndToyDataset(model::proto::Task::CLASSIFICATION, &model,
+                             &dataset);
+  model.Predict(dataset, 1, &prediction);
+  model::proto::Prediction expected_prediction = PARSE_TEST_PROTO(
+      R"pb(
+        classification {
+          value: 0
+          distribution { counts: 1 counts: 1 counts: 0 sum: 2 }
+        }
+      )pb");
+  EXPECT_THAT(prediction, EqualsProto(expected_prediction));
+
+  dataset::proto::Example example;
+  dataset.ExtractExample(1, &example);
+  model::proto::Prediction prediction2;
+  model.Predict(example, &prediction2);
+  EXPECT_THAT(prediction2, EqualsProto(expected_prediction));
+}
+
+TEST(DecisionTree, PredictRegression) {
+  RandomForestModel model;
+  dataset::VerticalDataset dataset;
+  model::proto::Prediction prediction;
+  BuildToyModelAndToyDataset(model::proto::Task::REGRESSION, &model, &dataset);
+  model.Predict(dataset, 1, &prediction);
+  model::proto::Prediction expected_prediction = PARSE_TEST_PROTO(
+      R"pb(
+        regression { value: 0.5 }
+      )pb");
+  EXPECT_THAT(prediction, EqualsProto(expected_prediction));
+
+  dataset::proto::Example example;
+  dataset.ExtractExample(1, &example);
+  model::proto::Prediction prediction2;
+  model.Predict(example, &prediction2);
+  EXPECT_THAT(prediction2, EqualsProto(expected_prediction));
+}
+
+TEST(DecisionTree, AppendDescriptionAndStatisticsToy) {
+  RandomForestModel model;
+  dataset::VerticalDataset dataset;
+  BuildToyModelAndToyDataset(model::proto::Task::CLASSIFICATION, &model,
+                             &dataset);
+  std::string description;
+  model.AppendDescriptionAndStatistics(false, &description);
+  YDF_LOG(INFO) << "description:\n" << description;
+
+  CHECK_NE(description.find("Type: \"RANDOM_FOREST\""), -1);
+  CHECK_NE(description.find("Task: CLASSIFICATION"), -1);
+  CHECK_NE(description.find("Label: \"b\""), -1);
+  CHECK_NE(description.find("Number of trees: 2"), -1);
+  CHECK_NE(description.find("Total number of nodes: 6"), -1);
+  CHECK_NE(description.find("Number of nodes by tree:\nCount: 2 Average: 3"),
+           -1);
+  CHECK_NE(description.find("Depth by leafs:\nCount: 4 Average: 1"), -1);
+  CHECK_NE(description.find("2 : HigherCondition"), -1);
+}
+
+TEST(DecisionTree, StructuralVariableImportance) {
+  RandomForestModel model;
+  dataset::VerticalDataset dataset;
+  BuildToyModelAndToyDataset(model::proto::Task::CLASSIFICATION, &model,
+                             &dataset);
+  std::string description;
+  model.AppendDescriptionAndStatistics(false, &description);
+  YDF_LOG(INFO) << "description:\n" << description;
+
+  const auto imp_num_nodes = model.GetVariableImportance("NUM_NODES").value();
+  EXPECT_EQ(imp_num_nodes.size(), 1);
+  EXPECT_EQ(imp_num_nodes[0].attribute_idx(), 0);
+  EXPECT_NEAR(imp_num_nodes[0].importance(), 2.0, 0.0001);
+
+  const auto imp_as_root = model.GetVariableImportance("NUM_AS_ROOT").value();
+  EXPECT_EQ(imp_as_root.size(), 1);
+  EXPECT_EQ(imp_as_root[0].attribute_idx(), 0);
+  EXPECT_NEAR(imp_as_root[0].importance(), 2.0, 0.0001);
+
+  const auto imp_sum_score = model.GetVariableImportance("SUM_SCORE").value();
+  EXPECT_EQ(imp_sum_score.size(), 1);
+  EXPECT_EQ(imp_sum_score[0].attribute_idx(), 0);
+  EXPECT_NEAR(imp_sum_score[0].importance(), 0.0, 0.0001);
+
+  const auto imp_mean_min_depth =
+      model.GetVariableImportance("INV_MEAN_MIN_DEPTH").value();
+  EXPECT_EQ(imp_mean_min_depth.size(), 1);
+  EXPECT_EQ(imp_mean_min_depth[0].attribute_idx(), 0);
+  EXPECT_NEAR(imp_mean_min_depth[0].importance(), 1.0, 0.0001);
+}
+
+TEST(DecisionTree, AppendModelStructure) {
+  RandomForestModel model;
+  dataset::VerticalDataset dataset;
+  BuildToyModelAndToyDataset(model::proto::Task::CLASSIFICATION, &model,
+                             &dataset);
+  std::string description;
+  model.AppendModelStructure(&description);
+
+  YDF_LOG(INFO) << description;
+  EXPECT_EQ(description, R"(Legend:
+    s: Split score
+    n: Number of training examples
+    np: Number of positive training examples
+    miss: Number of missing values
+    val: Prediction of the leaf/non-leaf node
+    prob: Predicted probability for the label values listed above (only used for classification)
+Number of trees:2
+
+Tree #0:
+    "a">=1 [s:0 n:0 np:0 miss:0]
+        ├─(pos)─ val:0 prob:[inf, inf]
+        └─(neg)─ val:1 prob:[inf, inf]
+
+Tree #1:
+    "a">=3 [s:0 n:0 np:0 miss:0]
+        ├─(pos)─ val:2 prob:[inf, inf]
+        └─(neg)─ val:1 prob:[inf, inf]
+
+)");
+}
+
+TEST(DecisionTree, IterateOnNodes) {
+  RandomForestModel model;
+  dataset::VerticalDataset dataset;
+  BuildToyModelAndToyDataset(model::proto::Task::CLASSIFICATION, &model,
+                             &dataset);
+  absl::node_hash_set<const decision_tree::NodeWithChildren*> visited_nodes;
+  model.IterateOnNodes(
+      [&](const decision_tree::NodeWithChildren& node, const int depth) {
+        EXPECT_TRUE(visited_nodes.find(&node) == visited_nodes.end());
+        visited_nodes.insert(&node);
+      });
+  EXPECT_EQ(visited_nodes.size(), 6);
+  EXPECT_EQ(visited_nodes.size(), model.NumNodes());
+}
+
+TEST(DecisionTree, IterateOnMutableNodes) {
+  RandomForestModel model;
+  dataset::VerticalDataset dataset;
+  BuildToyModelAndToyDataset(model::proto::Task::CLASSIFICATION, &model,
+                             &dataset);
+  absl::node_hash_set<const decision_tree::NodeWithChildren*> visited_nodes;
+  model.IterateOnMutableNodes(
+      [&](decision_tree::NodeWithChildren* node, const int depth) {
+        EXPECT_TRUE(visited_nodes.find(node) == visited_nodes.end());
+        visited_nodes.insert(node);
+      });
+  EXPECT_EQ(visited_nodes.size(), 6);
+  EXPECT_EQ(visited_nodes.size(), model.NumNodes());
+}
+
+TEST(RandomForest, EvaluationSnippet) {
+  const metric::proto::EvaluationResults evaluation = PARSE_TEST_PROTO(R"pb(
+    classification {
+      confusion {
+        sum: 10
+        counts: 4
+        counts: 1
+        counts: 1
+        counts: 4
+        nrow: 2
+        ncol: 2
+      }
+      sum_log_loss: 10
+    }
+    count_predictions: 10
+    task: CLASSIFICATION
+  )pb");
+  EXPECT_EQ(internal::EvaluationSnippet(evaluation), "accuracy:0.8 logloss:1");
+}
+
+TEST(DecisionTree, MinNumberObs) {
+  RandomForestModel model;
+  dataset::VerticalDataset dataset;
+  BuildToyModelAndToyDataset(model::proto::Task::CLASSIFICATION, &model,
+                             &dataset);
+  CHECK_EQ(model.MinNumberObs(), 2);
+}
+
+TEST(RandomForest, GetLeaves) {
+  std::unique_ptr<model::AbstractModel> model;
+  EXPECT_OK(model::LoadModel(
+      file::JoinPath(TestDataDir(), "model", "adult_binary_class_rf"), &model));
+
+  dataset::VerticalDataset dataset;
+  EXPECT_OK(dataset::LoadVerticalDataset(
+      absl::StrCat("csv:",
+                   file::JoinPath(TestDataDir(), "dataset", "adult_test.csv")),
+      model->data_spec(), &dataset));
+
+  auto* df_model = dynamic_cast<model::DecisionForestInterface*>(model.get());
+  if (df_model == nullptr) {
+    YDF_LOG(FATAL) << "The model is not a Random Forest.";
+  }
+
+  EXPECT_EQ(df_model->num_trees(), 100);
+
+  std::vector<int32_t> leaves(100);
+  EXPECT_OK(df_model->PredictGetLeaves(dataset, 0, absl::MakeSpan(leaves)));
+
+  EXPECT_EQ(leaves[0], 156);
+  EXPECT_EQ(leaves[1], 119);
+  EXPECT_EQ(leaves[2], 139);
+  EXPECT_EQ(leaves[3], 319);
+  EXPECT_EQ(leaves[4], 215);
+  EXPECT_EQ(leaves[5], 50);
+  EXPECT_EQ(leaves[6], 151);
+}
+
+TEST(RandomForest, SaveAndLoadModelWithoutPrefix) {
+  RandomForestModel original_model;
+  dataset::VerticalDataset dataset;
+  BuildToyModelAndToyDataset(model::proto::Task::CLASSIFICATION,
+                             &original_model, &dataset);
+  std::string model_path =
+      file::JoinPath(test::TmpDirectory(), "saved_model_without_prefix");
+  EXPECT_OK(SaveModel(model_path, &original_model, {}));
+
+  std::unique_ptr<model::AbstractModel> loaded_model;
+  EXPECT_OK(LoadModel(model_path, &loaded_model, {}));
+  EXPECT_EQ(original_model.DescriptionAndStatistics(/*full_definition=*/true),
+            loaded_model->DescriptionAndStatistics(/*full_definition=*/true));
+  EXPECT_EQ(original_model.mutable_metadata()->uid(),
+            loaded_model->mutable_metadata()->uid());
+}
+
+TEST(RandomForest, SaveAndLoadModelWithAutodetectedPrefix) {
+  RandomForestModel original_model;
+  dataset::VerticalDataset dataset;
+  BuildToyModelAndToyDataset(model::proto::Task::CLASSIFICATION,
+                             &original_model, &dataset);
+  std::string model_path =
+      file::JoinPath(test::TmpDirectory(), "saved_model_with_auto_prefix");
+  EXPECT_OK(
+      SaveModel(model_path, &original_model, {/*.file_prefix =*/"prefix_1_"}));
+
+  std::unique_ptr<model::AbstractModel> loaded_model;
+  EXPECT_OK(LoadModel(model_path, &loaded_model, {}));
+  EXPECT_EQ(original_model.DescriptionAndStatistics(/*full_definition=*/true),
+            loaded_model->DescriptionAndStatistics(/*full_definition=*/true));
+  EXPECT_EQ(original_model.mutable_metadata()->uid(),
+            loaded_model->mutable_metadata()->uid());
+}
+
+TEST(RandomForest, FailingPrefixDetectionForMultipleModelsPerDirectory) {
+  RandomForestModel original_model;
+  dataset::VerticalDataset dataset;
+  BuildToyModelAndToyDataset(model::proto::Task::CLASSIFICATION,
+                             &original_model, &dataset);
+  std::string model_path =
+      file::JoinPath(test::TmpDirectory(), "saved_model_with_auto_prefix");
+  ASSERT_OK(
+      SaveModel(model_path, &original_model, {/*.file_prefix =*/"prefix_1_"}));
+  ASSERT_OK(
+      SaveModel(model_path, &original_model, {/*.file_prefix =*/"prefix_2_"}));
+
+  std::unique_ptr<model::AbstractModel> loaded_model;
+  EXPECT_THAT(LoadModel(model_path, &loaded_model, {}),
+              StatusIs(absl::StatusCode::kFailedPrecondition));
+}
+
+TEST(RandomForest, SaveAndLoadModelWithPrefix) {
+  RandomForestModel original_model_1;
+  dataset::VerticalDataset dataset;
+  BuildToyModelAndToyDataset(model::proto::Task::CLASSIFICATION,
+                             &original_model_1, &dataset);
+  std::string saved_model_path =
+      file::JoinPath(test::TmpDirectory(), "saved_models_with_prefixes");
+  EXPECT_OK(SaveModel(saved_model_path, &original_model_1,
+                      {/*file_prefix=*/"prefix_1_"}));
+
+  RandomForestModel original_model_2;
+  BuildToyModelAndToyDataset(model::proto::Task::REGRESSION, &original_model_2,
+                             &dataset);
+  EXPECT_OK(SaveModel(saved_model_path, &original_model_2,
+                      {/*file_prefix=*/"prefix_2_"}));
+
+  std::unique_ptr<model::AbstractModel> loaded_model_1;
+  EXPECT_OK(LoadModel(saved_model_path, &loaded_model_1,
+                      {/*file_prefix=*/"prefix_1_"}));
+  EXPECT_EQ(original_model_1.DescriptionAndStatistics(/*full_definition=*/true),
+            loaded_model_1->DescriptionAndStatistics(/*full_definition=*/true));
+  EXPECT_EQ(original_model_1.mutable_metadata()->uid(),
+            loaded_model_1->mutable_metadata()->uid());
+
+  std::unique_ptr<model::AbstractModel> loaded_model_2;
+  EXPECT_OK(LoadModel(saved_model_path, &loaded_model_2,
+                      {/*file_prefix=*/"prefix_2_"}));
+  EXPECT_EQ(original_model_2.DescriptionAndStatistics(/*full_definition=*/true),
+            loaded_model_2->DescriptionAndStatistics(/*full_definition=*/true));
+  EXPECT_EQ(original_model_2.mutable_metadata()->uid(),
+            loaded_model_2->mutable_metadata()->uid());
+}
+
+TEST(RandomForest, TFDFModel) {
+  RandomForestModel model;
+  dataset::VerticalDataset dataset;
+  BuildToyModelAndToyDataset(model::proto::Task::CLASSIFICATION, &model,
+                             &dataset);
+  std::string saved_model_path =
+      file::JoinPath(test::TmpDirectory(), "tfdf_model", "assets");
+  EXPECT_OK(SaveModel(saved_model_path, &model));
+
+  std::unique_ptr<model::AbstractModel> loaded_model;
+  EXPECT_OK(LoadModel(saved_model_path, &loaded_model));
+}
+
+}  // namespace
+}  // namespace random_forest
+}  // namespace model
+}  // namespace yggdrasil_decision_forests

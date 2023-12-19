@@ -1,0 +1,171 @@
+/*
+ * Copyright 2022 Google LLC.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+syntax = "proto2";
+
+package yggdrasil_decision_forests.utils.model_analysis.proto;
+
+import "yggdrasil_decision_forests/dataset/data_spec.proto";
+import "yggdrasil_decision_forests/dataset/example.proto";
+import "yggdrasil_decision_forests/model/abstract_model.proto";
+import "yggdrasil_decision_forests/model/prediction.proto";
+import "yggdrasil_decision_forests/utils/partial_dependence_plot.proto";
+
+// Configuration for the model analysis
+message Options {
+  // Number of threads used for the computation.
+  optional int32 num_threads = 1 [default = 6];
+
+  // Enable the computation of Partial Dependence Plots.
+  optional PlotConfig pdp = 2;
+
+  // Enable the computation of Conditional Expectation Plot.
+  optional PlotConfig cep = 3;
+
+  // Configuration of the computation of the PDP and CEP.
+  message PlotConfig {
+    // Enable the computation.
+    optional bool enabled = 1 [default = true];
+    optional float example_sampling = 2 [default = 1.];
+    optional int32 num_numerical_bins = 3 [default = 50];
+  }
+
+  // Measure the importance of each input feature using permutation variable
+  // importance:
+  // https://christophm.github.io/interpretable-ml-book/feature-importance.html.
+  optional PermutedVariableImportance permuted_variable_importance = 7;
+
+  message PermutedVariableImportance {
+    optional bool enabled = 1 [default = true];
+
+    // Number of repetitions of the estimation. More repetitions increase the
+    // quality of the variable importance estimates.
+    optional int32 num_rounds = 2 [default = 1];
+  }
+
+  optional bool include_model_structural_variable_importances = 17
+      [default = false];
+
+  // Size, in pixel, of a figure (possibly composed of multiple plots).
+  optional int32 figure_width = 8 [default = 1600];
+
+  // Size in pixel of an individual plot.
+  optional int32 plot_width = 9 [default = 530];
+  optional int32 plot_height = 10 [default = 450];
+
+  optional ReportHeader report_header = 11;
+  message ReportHeader {
+    optional bool enabled = 1 [default = true];
+  }
+
+  optional TableOfContent table_of_content = 12;
+  message TableOfContent {
+    optional bool enabled = 1 [default = true];
+  }
+
+  optional ReportSetup report_setup = 13;
+  message ReportSetup {
+    optional bool enabled = 1 [default = true];
+  }
+
+  optional Dataspec dataspec = 14;
+  message Dataspec {
+    optional bool enabled = 1 [default = true];
+  }
+
+  optional ModelDescription model_description = 15;
+  message ModelDescription {
+    optional bool enabled = 1 [default = true];
+  }
+
+  optional Plot plot = 16;
+  message Plot {
+    optional bool show_interactive_menu = 1 [default = false];
+  }
+
+  // Prefix used to generate unique html element ids. If not set, use a random
+  // prefix.
+  optional string html_id_prefix = 18;
+}
+
+// Results of a model analysis.
+message AnalysisResult {
+  optional utils.proto.PartialDependencePlotSet pdp_set = 1;
+  optional utils.proto.PartialDependencePlotSet cep_set = 2;
+  map<string, model.proto.VariableImportanceSet> variable_importances = 3;
+}
+
+// An analysis result that does not need a model or a dataset to be displayed.
+message StandaloneAnalysisResult {
+  optional AnalysisResult core_analysis = 1;
+  optional string dataset_path = 2;
+  optional string model_path = 3;
+  optional dataset.proto.DataSpecification data_spec = 4;
+  optional int32 label_col_idx = 5;
+  optional model.proto.Task task = 6;
+  optional string model_description = 7;
+}
+
+message PredictionAnalysisOptions {
+  optional int32 numerical_num_bins = 1 [default = 50];
+  // Size in pixel of an individual plot.
+  optional int32 plot_width = 2 [default = 400];
+  optional int32 plot_height = 3 [default = 300];
+  // Prefix used to generate unique html element ids. If not set, use a random
+  // prefix.
+  optional string html_id_prefix = 4;
+}
+
+// Result of a prediction analysis.
+message PredictionAnalysisResult {
+  optional dataset.proto.DataSpecification data_spec = 1;
+  optional int32 label_col_idx = 2;
+  optional model.proto.Task task = 3;
+  optional FeatureVariation feature_variation = 4;
+  optional dataset.proto.Example example = 5;
+  optional model.proto.Prediction prediction = 6;
+}
+
+// Feature variation in a prediction analysis.
+message FeatureVariation {
+  repeated FeatureVariationItem items = 1;
+}
+
+message FeatureVariationItem {
+  // Bins, i.e., model outputs.
+  repeated Bin bins = 1;
+  // Attributes beeing varied.
+  repeated Attribute attributes = 2;
+
+  message Bin {
+    optional model.proto.Prediction prediction = 1;
+  }
+
+  message Attribute {
+    optional int32 column_idx = 2;
+    oneof type {
+      Numerical numerical = 3;
+      Categorical categorical = 4;
+      Boolean boolean = 5;
+    }
+    message Numerical {
+      repeated float values = 1 [packed = true];
+    }
+    message Categorical {
+      optional int32 num_values = 1;
+    }
+    message Boolean {}
+  }
+}

@@ -1,0 +1,64 @@
+/*
+ * Copyright 2022 Google LLC.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+syntax = "proto2";
+
+package yggdrasil_decision_forests.distribute.proto;
+
+// Configuration for the distribution manager and workers.
+message Config {
+  // Identifier of the distribution strategy.
+  //
+  // The registration strategy are registered with
+  // "REGISTER_Distribution_Manager" method. Make sure to link the
+  // implementation you are using.
+  //
+  // The "MULTI_THREAD" implementation is inefficient and only exist for unit
+  // testing purpose. For non-distributed training, rely on the multi-threading
+  // directly implemented in the learning algorithm.
+  optional string implementation_key = 1;
+
+  // Amount of verbose.
+  // 0: No information.
+  // 1: Small amount of information (e.g. creating of the workers).
+  // 2: Information at every query.
+  optional int32 verbosity = 5 [default = 1];
+
+  // Working directory accessible by the manager and workers. Can be used for
+  // communication by distribution implementations.
+  //
+  // If you are training a model with distributed training, do not specify this
+  // path directly. Instead, specify the "cache_path" of the deployment
+  // configuration (and this path will be set automatically).
+  optional string working_directory = 6;
+
+  // Implementation specific configuration.
+  extensions 1000 to max;
+}
+
+// List of socket addresses.
+message SocketAddresses {
+  repeated SocketAddress addresses = 1;
+  message SocketAddress {
+    // Human readable IP notation e.g. 127.0.0.1.
+    optional string ip = 1;
+    optional int32 port = 2;
+  }
+}
+
+message Bns {
+  optional string prefix = 1;
+  optional int32 num_workers = 2;
+}

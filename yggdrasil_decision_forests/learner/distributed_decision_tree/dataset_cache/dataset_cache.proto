@@ -1,0 +1,331 @@
+/*
+ * Copyright 2022 Google LLC.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+syntax = "proto2";
+
+package yggdrasil_decision_forests.model.distributed_decision_tree.dataset_cache.proto;
+
+import "yggdrasil_decision_forests/dataset/data_spec.proto";
+
+// Configuration for the creation of a cache.
+message CreateDatasetCacheConfig {
+  // Indicative size of a file in the index cache, expressed in bytes.
+  optional int64 index_cache_file_size_bytes = 1 [default = 20000000];  // 20MB
+
+  // Optional index of the label column in the dataspec.
+  optional int32 label_column_idx = 2;
+
+  // Optional index of the weight column in the dataspec. Not set if the
+  // training is non-weighted.
+  optional int32 weight_column_idx = 3;
+
+  // If true, and if "weight_column_idx" is set, the cache does not includes
+  // examples with weight = 0.
+  optional bool remove_zero_weighted_examples = 4 [default = true];
+
+  // Maximum number of unique value of a numerical feature to allow its
+  // pre-discretization. In case of large datasets, discretized numerical
+  // features with a small number of unique values are more efficient to learn
+  // than classical / non-discretized numerical features.
+  //
+  // This parameter does not impact the final model. However, it can speed-up or
+  // slown the training.
+  optional int64 max_unique_values_for_discretized_numerical = 5
+      [default = 16000];
+
+  // If false, only the numerical column safisfying
+  // "max_unique_values_for_discretized_numerical" will be discretized. If true,
+  // all the numerical columns will be discretized. Columns with more than
+  // "max_unique_values_for_discretized_numerical" unique values will be
+  // approximated with "max_unique_values_for_discretized_numerical" bins.
+  //
+  // This parameter will impact the model training.
+  optional bool force_numerical_discretization = 6 [default = false];
+}
+
+// Welcome message of the worker.
+message WorkerWelcome {
+  // No welcome data yet.
+}
+
+// Request message of the workers.
+message WorkerRequest {
+  // Each of the following actions are made available buy a function of the same
+  // name in "column_cache.h".
+  oneof type {
+    // Separate the columns of a dataset into individual files (per column and
+    // per shards).
+    SeparateDatasetColumns separate_dataset_columns = 1;
+
+    // Sort or discretize a numerical column (depending on the number of unique
+    // values).
+    //
+    // Sorting a numerical column consist in exporting both the unique attribute
+    // values (sorted by value) as well as the example indices (ordered by the
+    // attribute value).
+    //
+    // Discretizing a numerical column consists in export the unique attribute
+    // values (sorted by value; same as before) and the index of the attribute
+    // value in this table (sorted by example index i.e. the original dataset
+    // ordering).
+    //
+    // Currently, this stage is implemented with in-memory sorting i.e. worker
+    // should be able to load an entire column in memory i.e. 4 bytes * number
+    // of examples.
+    //
+    // If the number of unique values is small enough, this stage can compute
+    // the optimal discretization (using the sorted values) and then export
+    // the discretized values.
+    SortNumericalColumn sort_numerical_column = 2;
+
+    // Copy and transform the raw data in the partial cache format into the raw
+    // data in the (final) cache format.
+    ConvertPartialToFinalRawData convert_partial_to_final_raw_data = 3;
+  }
+
+  message SeparateDatasetColumns {
+    // Part to dataset (or subset of dataset).
+    optional string dataset_path = 1;
+
+    // Output directory.
+    optional string output_directory = 2;
+
+    // Columns to exact. The other columns are ignored.
+    repeated int32 columns = 3;
+    optional dataset.proto.DataSpecification dataspec = 4;
+
+    // Corresponding shard index in the feature cache.
+    optional int32 shard_idx = 5;
+
+    // If set, index of a numerical column. The example with zero value (for
+    // this column) are removed from the cache.
+    optional int32 column_idx_remove_example_with_zero = 6;
+
+    // Number of shards for the feature.
+    optional int32 num_shards = 7;
+  }
+
+  message SortNumericalColumn {
+    // Where to save the sorted columns.
+    optional string output_base_directory = 1;
+
+    // Total number of example in the column.
+    optional int64 num_examples = 2;
+
+    // Index of the column.
+    optional int32 column_idx = 3;
+
+    // Number of shards in the input data.
+    optional int32 num_shards = 4;
+
+    // Root directory of the cache. Contains the input columns.
+    optional string cache_directory = 5;
+
+    // Number of examples to write in each output shard.
+    optional int32 num_example_per_output_shards = 6;
+
+    // Depending on the number of unique values, the numerical column will
+    // exported as pre-sorted or pre-discretized.
+    //
+    // If the number of unique values is >
+    // max_unique_values_for_discretized_numerical, the output will contains
+    // sorted numerical values. Otherwise, the output will contain in-order
+    // discretizerd numerical values.
+    optional int64 max_unique_values_for_discretized_numerical = 7;
+
+    // Value replacing missing values in the input. This is only used to compute
+    // the returned meta data message (as missing values have been filtered in
+    // the previous stage).
+    optional float replacement_missing_value = 8;
+
+    // If true, force the discretization of the column. If the column contains
+    // more than "max_unique_values_for_discretized_numerical" unique values,
+    // the column is discretized using
+    // "max_unique_values_for_discretized_numerical" quantiles.
+    optional bool force_numerical_discretization = 9;
+
+    // Number of expected shards in the output.
+    optional int32 num_shards_in_output_shards = 10;
+  }
+
+  message ConvertPartialToFinalRawData {
+    optional string partial_cache_directory = 1;
+    optional string final_cache_directory = 2;
+    optional int32 column_idx = 3;
+    optional int32 shard_idx = 4;
+    optional int32 num_shards = 5;
+    optional bool delete_source_file = 6 [default = false];
+
+    oneof transformation {
+      Numerical numerical = 7;
+      CategoricalInt categorical_int = 8;
+      CategoricalString categorical_string = 9;
+    }
+
+    message Numerical {
+      // Replace the NaN values.
+      optional float nan_value_replacement = 1;
+    }
+
+    message CategoricalInt {
+      optional int64 max_value = 1;
+      optional int32 nan_value_replacement = 2;
+    }
+
+    message CategoricalString {
+      // Same as "items" in the dataspec.
+      // Dictionary for a categorical string feature of the result.
+      map<string, dataset.proto.CategoricalSpec.VocabValue> items = 1;
+      optional int32 nan_value_replacement = 2;
+    }
+  }
+}
+
+// Result message of the worker.
+message WorkerResult {
+  oneof type {
+    SeparateDatasetColumns separate_dataset_columns = 1;
+    SortNumericalColumn sort_numerical_column = 2;
+    ConvertPartialToFinalRawData convert_partial_to_final_raw_data = 3;
+  }
+
+  message SeparateDatasetColumns {
+    // optional string output_directory = 1;
+    optional int32 shard_idx = 2;
+    optional int64 num_examples = 3;
+  }
+
+  message SortNumericalColumn {
+    optional string output_directory = 1;
+    optional int32 column_idx = 2;
+    optional CacheMetadata.NumericalColumn metadata = 3;
+  }
+
+  message ConvertPartialToFinalRawData {}
+}
+
+// Information relative to one shard in the feature cache.
+message ShardMetadata {
+  // Number of example in the shard.
+  optional int64 num_examples = 1;
+}
+
+// Information relative to one pre-sorted column in the index cache.
+message SortedColumnMetadata {
+  optional CacheMetadata.NumericalColumn metadata = 1;
+}
+
+// Metadata relative to the entire cache.
+message CacheMetadata {
+  // Number of examples in the entire cache.
+  optional int64 num_examples = 1;
+
+  // Number of shards i.e. the data of each features is divided into
+  // "num_shards" files.
+  optional int32 num_shards_in_feature_cache = 2;
+
+  // Number of shards for the index cache.
+  optional int32 num_shards_in_index_cache = 3;
+
+  // Information about the columns.
+  repeated Column columns = 4;
+
+  // Index of the label column in the dataspec.
+  optional int32 label_column_idx = 5;
+
+  // Index of the weight column in the dataspec. Not set if the training is
+  // non-weighted.
+  optional int32 weight_column_idx = 6;
+
+  message Column {
+    // Is the column available in the cache.
+    optional bool available = 1 [default = false];
+
+    // Type-specific column information.
+    oneof type {
+      NumericalColumn numerical = 2;
+      CategoricalColumn categorical = 3;
+      BooleanColumn boolean = 4;
+    }
+  }
+
+  message NumericalColumn {
+    optional float replacement_missing_value = 1;
+    optional int64 num_unique_values = 2;
+    optional bool discretized = 3;
+    optional int32 discretized_replacement_missing_value = 4;
+    optional int64 num_discretized_shards = 5;
+    optional int32 num_discretized_values = 6;
+  }
+
+  message CategoricalColumn {
+    optional int64 num_values = 1;
+    optional int32 replacement_missing_value = 2;
+  }
+
+  message BooleanColumn {
+    optional bool replacement_missing_value = 2;
+  }
+}
+
+message DatasetCacheReaderOptions {
+  // Indices of the features accessible in reading operations.
+  repeated int32 features = 1 [packed = true];
+
+  // If set, loads all the available features. In this case, "features"  should
+  // be empty.
+  optional bool load_all_features = 4 [default = true];
+
+  // Number of values to read at each reading call.
+  optional int32 reading_buffer = 2 [default = 2000];
+
+  // Load an read the cache from memory, or read the cache from disk.
+  optional bool load_cache_in_memory = 3 [default = true];
+}
+
+// Partial metadata from a subset of observations of a given column obtained
+// during the creation of a dataset cache.
+message PartialColumnShardMetadata {
+  // Number of example in the shard.
+  optional int64 num_examples = 1;
+  optional int64 num_missing_examples = 2;
+
+  oneof type {
+    NumericalColumn numerical = 3;
+    CategoricalColumn categorical = 4;
+  }
+
+  message NumericalColumn {
+    optional double mean = 1;
+    optional double min = 2;
+    optional double max = 3;
+  }
+
+  message CategoricalColumn {
+    // Same as "number_of_unique_values" in the dataspec.
+    // Integer values should be in [-1, number_of_unique_values).
+    optional int64 number_of_unique_values = 1;
+
+    // Same as "items" in the dataspec.
+    // Dictionary for a categorical string feature.
+    map<string, dataset.proto.CategoricalSpec.VocabValue> items = 2;
+  }
+}
+
+// Partial metadata  during the creation of a dataset cache.
+message PartialDatasetMetadata {
+  repeated string column_names = 1;
+  optional int32 num_shards = 2;
+}

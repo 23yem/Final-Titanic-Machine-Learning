@@ -1,0 +1,86 @@
+/*
+ * Copyright 2022 Google LLC.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+syntax = "proto2";
+
+package yggdrasil_decision_forests.model.proto;
+
+import "yggdrasil_decision_forests/utils/distribution.proto";
+
+// Generic prediction (prediction over a single example). Those are usually the
+// output of a ML model.
+//
+// Optionally, it may contains the ground truth (e.g. the label value). When the
+// ground truth is present, such a "Prediction" proto can be used for evaluation
+// (see "metric.h").
+//
+message Prediction {
+  message Classification {
+    // Predicted class as indexed in the dataspec.
+    optional int32 value = 1;
+    // Predicted distribution over the possible classes. If specified, the
+    // following relation holds: "value == argmax_i(distribution[i])".
+    optional utils.proto.IntegerDistributionFloat distribution = 2;
+    optional int32 ground_truth = 3;
+  }
+
+  message Regression {
+    optional float value = 1;
+    optional float ground_truth = 2;
+  }
+
+  message Ranking {
+    // Predicted relevance (the higher, the most likely to be selected).
+    optional float relevance = 1;
+    optional float ground_truth_relevance = 2;
+    // Group of the predictions. Predictions with a same group are competing.
+    optional int32 deprecated_group = 3 [deprecated = true];
+    // Group of the predictions. Can be a categorical or a hash value.
+    optional uint64 group_id = 4;
+  }
+
+  message Uplift {
+    // Predicted treatment effect.
+    //
+    // treatment_effect[i] is the effect of the "i+1"-th treatment (categorical
+    // value i+2) compared to the control group (0-th treatment; categorical
+    // value = 1). The treatment out-of-vocabulary item (value = 0) is not taken
+    // into account.
+    repeated float treatment_effect = 1 [packed = true];
+
+    // Applied treatment. The control group is treatment = 1. Other treatments
+    // are >1.
+    optional int32 treatment = 2;
+
+    // Outcome (with or without treatment).
+    oneof outcome_type {
+      int32 outcome_categorical = 3;
+      float outcome_numerical = 4;
+    }
+  }
+
+  oneof type {
+    Classification classification = 1;
+    Regression regression = 2;
+    Ranking ranking = 5;
+    Uplift uplift = 6;
+  }
+  optional float weight = 3 [default = 1];
+
+  // Identifier about the example.
+  optional string example_key = 4;
+
+  // Next ID: 6
+}
