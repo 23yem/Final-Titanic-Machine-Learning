@@ -1,0 +1,517 @@
+Model: "random_forest_model_8"
+_________________________________________________________________
+ Layer (type)                Output Shape              Param #   
+=================================================================
+=================================================================
+Total params: 1 (1.00 Byte)
+Trainable params: 0 (0.00 Byte)
+Non-trainable params: 1 (1.00 Byte)
+_________________________________________________________________
+Type: "RANDOM_FOREST"
+Task: CLASSIFICATION
+Label: "__LABEL"
+
+Input Features (10):
+	Age
+	FamilySize
+	Fare
+	FemaleFirstClass
+	IsAlone
+	Parch
+	Pclass
+	Sex_female
+	Sex_male
+	SibSp
+
+No weights
+
+Variable Importance: INV_MEAN_MIN_DEPTH:
+    1.              "Age"  0.422297 ################
+    2.       "FamilySize"  0.265361 #######
+    3.             "Fare"  0.252870 ######
+    4.           "Pclass"  0.187330 ###
+    5. "FemaleFirstClass"  0.134262 
+    6.            "Parch"  0.130192 
+    7.       "Sex_female"  0.127330 
+    8.          "IsAlone"  0.127061 
+    9.         "Sex_male"  0.125655 
+   10.            "SibSp"  0.124224 
+
+Variable Importance: MEAN_DECREASE_IN_ACCURACY:
+    1.              "Age"  0.070225 ################
+    2.             "Fare"  0.019663 ####
+    3.       "FamilySize"  0.016854 ###
+    4.           "Pclass"  0.007022 #
+    5. "FemaleFirstClass"  0.002809 
+    6.       "Sex_female"  0.002809 
+    7.            "Parch"  0.001404 
+    8.          "IsAlone"  0.000000 
+    9.         "Sex_male"  0.000000 
+   10.            "SibSp"  0.000000 
+
+Variable Importance: MEAN_DECREASE_IN_AP_2_VS_OTHERS:
+    1.              "Age"  0.057139 ################
+    2.           "Pclass"  0.055909 ###############
+    3.             "Fare"  0.024861 ######
+    4.       "FamilySize"  0.013147 ###
+    5.            "Parch"  0.007180 ##
+    6.       "Sex_female"  0.004104 #
+    7. "FemaleFirstClass"  0.004079 #
+    8.         "Sex_male"  0.003590 #
+    9.          "IsAlone"  0.001696 
+   10.            "SibSp"  0.000003 
+
+Variable Importance: MEAN_DECREASE_IN_AUC_2_VS_OTHERS:
+    1.              "Age"  0.034812 ################
+    2.           "Pclass"  0.011674 ######
+    3.             "Fare"  0.011013 #####
+    4.       "FamilySize"  0.006680 ###
+    5. "FemaleFirstClass"  0.001159 #
+    6.          "IsAlone"  0.000687 #
+    7.            "Parch"  0.000632 #
+    8.         "Sex_male"  0.000514 #
+    9.            "SibSp" -0.000000 #
+   10.       "Sex_female" -0.002398 
+
+Variable Importance: MEAN_DECREASE_IN_PRAUC_2_VS_OTHERS:
+    1.              "Age"  0.052970 ################
+    2.           "Pclass"  0.051393 ###############
+    3.             "Fare"  0.019216 #####
+    4.       "FamilySize"  0.009270 ##
+    5.            "Parch"  0.003373 #
+    6.       "Sex_female"  0.000279 
+    7. "FemaleFirstClass"  0.000233 
+    8.            "SibSp"  0.000009 
+    9.         "Sex_male" -0.000185 
+   10.          "IsAlone" -0.000246 
+
+Variable Importance: NUM_AS_ROOT:
+    1.       "FamilySize" 111.000000 ################
+    2.           "Pclass" 87.000000 ############
+    3.              "Age" 43.000000 #####
+    4.             "Fare" 21.000000 ##
+    5. "FemaleFirstClass" 16.000000 #
+    6.       "Sex_female"  8.000000 
+    7.            "Parch"  7.000000 
+    8.         "Sex_male"  4.000000 
+    9.          "IsAlone"  3.000000 
+
+Variable Importance: NUM_NODES:
+    1.              "Age" 7763.000000 ################
+    2.             "Fare" 3464.000000 #######
+    3.       "FamilySize" 1517.000000 ###
+    4.           "Pclass" 197.000000 
+    5. "FemaleFirstClass" 93.000000 
+    6.            "Parch" 73.000000 
+    7.          "IsAlone" 51.000000 
+    8.       "Sex_female" 15.000000 
+    9.            "SibSp"  8.000000 
+   10.         "Sex_male"  7.000000 
+
+Variable Importance: SUM_SCORE:
+    1.              "Age" 47861.560168 ################
+    2.       "FamilySize" 22356.570999 #######
+    3.             "Fare" 21865.206599 #######
+    4.           "Pclass" 13123.011872 ####
+    5. "FemaleFirstClass" 2689.998370 
+    6.            "Parch" 1331.457962 
+    7.       "Sex_female" 957.695887 
+    8.          "IsAlone" 744.843628 
+    9.         "Sex_male" 468.629435 
+   10.            "SibSp" 25.943481 
+
+
+Hyperparameter optimizer:
+
+Best parameters: split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:2 sparse_oblique_normalization:STANDARD_DEVIATION sparse_oblique_weights:BINARY categorical_algorithm:CART winner_take_all:true max_depth:12 min_examples:5
+Num steps: 200
+Best score: 0.848315
+
+Step #0 score:0.828652 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:1 sparse_oblique_normalization:NONE sparse_oblique_weights:CONTINUOUS categorical_algorithm:RANDOM winner_take_all:true max_depth:25 min_examples:40 }
+Step #1 score:0.828652 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:3 sparse_oblique_normalization:STANDARD_DEVIATION sparse_oblique_weights:CONTINUOUS categorical_algorithm:RANDOM winner_take_all:true max_depth:25 min_examples:40 }
+Step #2 score:0.835674 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:1 sparse_oblique_normalization:MIN_MAX sparse_oblique_weights:CONTINUOUS categorical_algorithm:CART winner_take_all:true max_depth:20 min_examples:10 }
+Step #3 score:0.831461 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:5 sparse_oblique_normalization:NONE sparse_oblique_weights:CONTINUOUS categorical_algorithm:CART winner_take_all:true max_depth:16 min_examples:40 }
+Step #4 score:0.838483 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:5 sparse_oblique_normalization:MIN_MAX sparse_oblique_weights:BINARY categorical_algorithm:CART winner_take_all:true max_depth:12 min_examples:40 }
+Step #5 score:0.839888 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:2 sparse_oblique_normalization:NONE sparse_oblique_weights:BINARY categorical_algorithm:CART winner_take_all:true max_depth:20 min_examples:10 }
+Step #6 score:0.845506 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:2 sparse_oblique_normalization:MIN_MAX sparse_oblique_weights:BINARY categorical_algorithm:RANDOM winner_take_all:true max_depth:30 min_examples:10 }
+Step #7 score:0.842697 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:3 sparse_oblique_normalization:STANDARD_DEVIATION sparse_oblique_weights:BINARY categorical_algorithm:RANDOM winner_take_all:true max_depth:30 min_examples:10 }
+Step #8 score:0.828652 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:4 sparse_oblique_normalization:MIN_MAX sparse_oblique_weights:BINARY categorical_algorithm:RANDOM winner_take_all:true max_depth:16 min_examples:40 }
+Step #9 score:0.838483 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:4 sparse_oblique_normalization:MIN_MAX sparse_oblique_weights:CONTINUOUS categorical_algorithm:RANDOM winner_take_all:true max_depth:16 min_examples:10 }
+Step #10 score:0.844101 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:5 sparse_oblique_normalization:MIN_MAX sparse_oblique_weights:BINARY categorical_algorithm:RANDOM winner_take_all:true max_depth:20 min_examples:10 }
+Step #11 score:0.841292 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:4 sparse_oblique_normalization:STANDARD_DEVIATION sparse_oblique_weights:CONTINUOUS categorical_algorithm:RANDOM winner_take_all:true max_depth:16 min_examples:5 }
+Step #12 score:0.832865 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:4 sparse_oblique_normalization:NONE sparse_oblique_weights:BINARY categorical_algorithm:RANDOM winner_take_all:true max_depth:30 min_examples:40 }
+Step #13 score:0.828652 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:1 sparse_oblique_normalization:STANDARD_DEVIATION sparse_oblique_weights:BINARY categorical_algorithm:RANDOM winner_take_all:true max_depth:25 min_examples:40 }
+Step #14 score:0.825843 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:3 sparse_oblique_normalization:STANDARD_DEVIATION sparse_oblique_weights:BINARY categorical_algorithm:CART winner_take_all:true max_depth:30 min_examples:40 }
+Step #15 score:0.817416 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:3 sparse_oblique_normalization:STANDARD_DEVIATION sparse_oblique_weights:BINARY categorical_algorithm:RANDOM winner_take_all:true max_depth:30 min_examples:1 }
+Step #16 score:0.818820 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:3 sparse_oblique_normalization:NONE sparse_oblique_weights:CONTINUOUS categorical_algorithm:CART winner_take_all:true max_depth:30 min_examples:2 }
+Step #17 score:0.839888 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:5 sparse_oblique_normalization:MIN_MAX sparse_oblique_weights:BINARY categorical_algorithm:RANDOM winner_take_all:true max_depth:30 min_examples:5 }
+Step #18 score:0.817416 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:5 sparse_oblique_normalization:MIN_MAX sparse_oblique_weights:CONTINUOUS categorical_algorithm:CART winner_take_all:true max_depth:16 min_examples:1 }
+Step #19 score:0.830056 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:1 sparse_oblique_normalization:NONE sparse_oblique_weights:CONTINUOUS categorical_algorithm:RANDOM winner_take_all:true max_depth:12 min_examples:1 }
+Step #20 score:0.839888 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:2 sparse_oblique_normalization:NONE sparse_oblique_weights:BINARY categorical_algorithm:CART winner_take_all:true max_depth:30 min_examples:10 }
+Step #21 score:0.839888 parameters:{ split_axis:AXIS_ALIGNED categorical_algorithm:CART winner_take_all:true max_depth:16 min_examples:2 }
+Step #22 score:0.821629 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:4 sparse_oblique_normalization:STANDARD_DEVIATION sparse_oblique_weights:BINARY categorical_algorithm:CART winner_take_all:true max_depth:25 min_examples:2 }
+Step #23 score:0.825843 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:3 sparse_oblique_normalization:MIN_MAX sparse_oblique_weights:BINARY categorical_algorithm:CART winner_take_all:true max_depth:16 min_examples:40 }
+Step #24 score:0.830056 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:4 sparse_oblique_normalization:NONE sparse_oblique_weights:CONTINUOUS categorical_algorithm:RANDOM winner_take_all:true max_depth:12 min_examples:1 }
+Step #25 score:0.834270 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:2 sparse_oblique_normalization:STANDARD_DEVIATION sparse_oblique_weights:CONTINUOUS categorical_algorithm:RANDOM winner_take_all:true max_depth:20 min_examples:2 }
+Step #26 score:0.827247 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:2 sparse_oblique_normalization:MIN_MAX sparse_oblique_weights:BINARY categorical_algorithm:RANDOM winner_take_all:true max_depth:16 min_examples:40 }
+Step #27 score:0.838483 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:1 sparse_oblique_normalization:NONE sparse_oblique_weights:CONTINUOUS categorical_algorithm:RANDOM winner_take_all:true max_depth:12 min_examples:2 }
+Step #28 score:0.839888 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:2 sparse_oblique_normalization:MIN_MAX sparse_oblique_weights:BINARY categorical_algorithm:CART winner_take_all:true max_depth:25 min_examples:5 }
+Step #29 score:0.839888 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:3 sparse_oblique_normalization:STANDARD_DEVIATION sparse_oblique_weights:BINARY categorical_algorithm:RANDOM winner_take_all:true max_depth:30 min_examples:5 }
+Step #30 score:0.831461 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:1 sparse_oblique_normalization:MIN_MAX sparse_oblique_weights:BINARY categorical_algorithm:CART winner_take_all:true max_depth:16 min_examples:2 }
+Step #31 score:0.813202 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:2 sparse_oblique_normalization:MIN_MAX sparse_oblique_weights:CONTINUOUS categorical_algorithm:CART winner_take_all:true max_depth:20 min_examples:1 }
+Step #32 score:0.818820 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:1 sparse_oblique_normalization:MIN_MAX sparse_oblique_weights:BINARY categorical_algorithm:RANDOM winner_take_all:true max_depth:25 min_examples:1 }
+Step #33 score:0.835674 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:1 sparse_oblique_normalization:STANDARD_DEVIATION sparse_oblique_weights:BINARY categorical_algorithm:RANDOM winner_take_all:true max_depth:20 min_examples:2 }
+Step #34 score:0.811798 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:2 sparse_oblique_normalization:STANDARD_DEVIATION sparse_oblique_weights:BINARY categorical_algorithm:CART winner_take_all:true max_depth:20 min_examples:1 }
+Step #35 score:0.841292 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:4 sparse_oblique_normalization:NONE sparse_oblique_weights:CONTINUOUS categorical_algorithm:RANDOM winner_take_all:true max_depth:12 min_examples:5 }
+Step #36 score:0.830056 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:5 sparse_oblique_normalization:STANDARD_DEVIATION sparse_oblique_weights:BINARY categorical_algorithm:RANDOM winner_take_all:true max_depth:16 min_examples:40 }
+Step #37 score:0.844101 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:5 sparse_oblique_normalization:MIN_MAX sparse_oblique_weights:CONTINUOUS categorical_algorithm:CART winner_take_all:true max_depth:16 min_examples:10 }
+Step #38 score:0.844101 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:3 sparse_oblique_normalization:STANDARD_DEVIATION sparse_oblique_weights:BINARY categorical_algorithm:RANDOM winner_take_all:true max_depth:16 min_examples:5 }
+Step #39 score:0.814607 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:2 sparse_oblique_normalization:NONE sparse_oblique_weights:BINARY categorical_algorithm:RANDOM winner_take_all:true max_depth:20 min_examples:1 }
+Step #40 score:0.828652 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:3 sparse_oblique_normalization:MIN_MAX sparse_oblique_weights:CONTINUOUS categorical_algorithm:RANDOM winner_take_all:true max_depth:16 min_examples:40 }
+Step #41 score:0.830056 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:2 sparse_oblique_normalization:NONE sparse_oblique_weights:CONTINUOUS categorical_algorithm:CART winner_take_all:true max_depth:12 min_examples:2 }
+Step #42 score:0.830056 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:3 sparse_oblique_normalization:MIN_MAX sparse_oblique_weights:BINARY categorical_algorithm:RANDOM winner_take_all:true max_depth:20 min_examples:2 }
+Step #43 score:0.842697 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:5 sparse_oblique_normalization:NONE sparse_oblique_weights:CONTINUOUS categorical_algorithm:RANDOM winner_take_all:true max_depth:12 min_examples:5 }
+Step #44 score:0.842697 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:4 sparse_oblique_normalization:MIN_MAX sparse_oblique_weights:BINARY categorical_algorithm:CART winner_take_all:true max_depth:12 min_examples:5 }
+Step #45 score:0.839888 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:3 sparse_oblique_normalization:STANDARD_DEVIATION sparse_oblique_weights:BINARY categorical_algorithm:CART winner_take_all:true max_depth:12 min_examples:5 }
+Step #46 score:0.844101 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:5 sparse_oblique_normalization:MIN_MAX sparse_oblique_weights:BINARY categorical_algorithm:CART winner_take_all:true max_depth:25 min_examples:10 }
+Step #47 score:0.830056 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:1 sparse_oblique_normalization:NONE sparse_oblique_weights:CONTINUOUS categorical_algorithm:CART winner_take_all:true max_depth:12 min_examples:1 }
+Step #48 score:0.823034 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:5 sparse_oblique_normalization:NONE sparse_oblique_weights:CONTINUOUS categorical_algorithm:RANDOM winner_take_all:true max_depth:16 min_examples:2 }
+Step #49 score:0.839888 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:2 sparse_oblique_normalization:NONE sparse_oblique_weights:CONTINUOUS categorical_algorithm:RANDOM winner_take_all:true max_depth:12 min_examples:5 }
+Step #50 score:0.823034 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:1 sparse_oblique_normalization:STANDARD_DEVIATION sparse_oblique_weights:CONTINUOUS categorical_algorithm:CART winner_take_all:true max_depth:12 min_examples:40 }
+Step #51 score:0.842697 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:3 sparse_oblique_normalization:STANDARD_DEVIATION sparse_oblique_weights:BINARY categorical_algorithm:RANDOM winner_take_all:true max_depth:25 min_examples:10 }
+Step #52 score:0.838483 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:5 sparse_oblique_normalization:NONE sparse_oblique_weights:BINARY categorical_algorithm:RANDOM winner_take_all:true max_depth:12 min_examples:10 }
+Step #53 score:0.827247 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:2 sparse_oblique_normalization:MIN_MAX sparse_oblique_weights:BINARY categorical_algorithm:RANDOM winner_take_all:true max_depth:25 min_examples:40 }
+Step #54 score:0.835674 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:4 sparse_oblique_normalization:STANDARD_DEVIATION sparse_oblique_weights:BINARY categorical_algorithm:CART winner_take_all:true max_depth:30 min_examples:5 }
+Step #55 score:0.837079 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:3 sparse_oblique_normalization:NONE sparse_oblique_weights:CONTINUOUS categorical_algorithm:RANDOM winner_take_all:true max_depth:16 min_examples:5 }
+Step #56 score:0.828652 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:2 sparse_oblique_normalization:STANDARD_DEVIATION sparse_oblique_weights:BINARY categorical_algorithm:RANDOM winner_take_all:true max_depth:25 min_examples:40 }
+Step #57 score:0.845506 parameters:{ split_axis:AXIS_ALIGNED categorical_algorithm:RANDOM winner_take_all:true max_depth:12 min_examples:1 }
+Step #58 score:0.828652 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:3 sparse_oblique_normalization:MIN_MAX sparse_oblique_weights:CONTINUOUS categorical_algorithm:RANDOM winner_take_all:true max_depth:25 min_examples:2 }
+Step #59 score:0.825843 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:4 sparse_oblique_normalization:MIN_MAX sparse_oblique_weights:CONTINUOUS categorical_algorithm:RANDOM winner_take_all:true max_depth:16 min_examples:40 }
+Step #60 score:0.827247 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:2 sparse_oblique_normalization:NONE sparse_oblique_weights:CONTINUOUS categorical_algorithm:RANDOM winner_take_all:true max_depth:30 min_examples:40 }
+Step #61 score:0.813202 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:5 sparse_oblique_normalization:MIN_MAX sparse_oblique_weights:BINARY categorical_algorithm:RANDOM winner_take_all:true max_depth:20 min_examples:1 }
+Step #62 score:0.830056 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:4 sparse_oblique_normalization:MIN_MAX sparse_oblique_weights:BINARY categorical_algorithm:CART winner_take_all:true max_depth:12 min_examples:1 }
+Step #63 score:0.823034 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:1 sparse_oblique_normalization:STANDARD_DEVIATION sparse_oblique_weights:CONTINUOUS categorical_algorithm:CART winner_take_all:true max_depth:16 min_examples:40 }
+Step #64 score:0.837079 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:4 sparse_oblique_normalization:NONE sparse_oblique_weights:CONTINUOUS categorical_algorithm:RANDOM winner_take_all:true max_depth:30 min_examples:5 }
+Step #65 score:0.839888 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:2 sparse_oblique_normalization:MIN_MAX sparse_oblique_weights:BINARY categorical_algorithm:RANDOM winner_take_all:true max_depth:30 min_examples:5 }
+Step #66 score:0.813202 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:5 sparse_oblique_normalization:STANDARD_DEVIATION sparse_oblique_weights:BINARY categorical_algorithm:CART winner_take_all:true max_depth:25 min_examples:2 }
+Step #67 score:0.844101 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:3 sparse_oblique_normalization:STANDARD_DEVIATION sparse_oblique_weights:CONTINUOUS categorical_algorithm:CART winner_take_all:true max_depth:30 min_examples:10 }
+Step #68 score:0.837079 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:5 sparse_oblique_normalization:MIN_MAX sparse_oblique_weights:CONTINUOUS categorical_algorithm:CART winner_take_all:true max_depth:30 min_examples:5 }
+Step #69 score:0.828652 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:1 sparse_oblique_normalization:MIN_MAX sparse_oblique_weights:BINARY categorical_algorithm:CART winner_take_all:true max_depth:25 min_examples:40 }
+Step #70 score:0.813202 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:5 sparse_oblique_normalization:MIN_MAX sparse_oblique_weights:CONTINUOUS categorical_algorithm:RANDOM winner_take_all:true max_depth:30 min_examples:1 }
+Step #71 score:0.839888 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:1 sparse_oblique_normalization:NONE sparse_oblique_weights:BINARY categorical_algorithm:RANDOM winner_take_all:true max_depth:20 min_examples:5 }
+Step #72 score:0.817416 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:5 sparse_oblique_normalization:MIN_MAX sparse_oblique_weights:CONTINUOUS categorical_algorithm:RANDOM winner_take_all:true max_depth:16 min_examples:1 }
+Step #73 score:0.838483 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:1 sparse_oblique_normalization:MIN_MAX sparse_oblique_weights:BINARY categorical_algorithm:CART winner_take_all:true max_depth:16 min_examples:10 }
+Step #74 score:0.838483 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:5 sparse_oblique_normalization:MIN_MAX sparse_oblique_weights:BINARY categorical_algorithm:RANDOM winner_take_all:true max_depth:16 min_examples:40 }
+Step #75 score:0.832865 parameters:{ split_axis:AXIS_ALIGNED categorical_algorithm:RANDOM winner_take_all:true max_depth:12 min_examples:10 }
+Step #76 score:0.817416 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:1 sparse_oblique_normalization:MIN_MAX sparse_oblique_weights:BINARY categorical_algorithm:CART winner_take_all:true max_depth:20 min_examples:1 }
+Step #77 score:0.831461 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:4 sparse_oblique_normalization:STANDARD_DEVIATION sparse_oblique_weights:BINARY categorical_algorithm:CART winner_take_all:true max_depth:20 min_examples:40 }
+Step #78 score:0.835674 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:3 sparse_oblique_normalization:NONE sparse_oblique_weights:CONTINUOUS categorical_algorithm:CART winner_take_all:true max_depth:25 min_examples:5 }
+Step #79 score:0.810393 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:5 sparse_oblique_normalization:STANDARD_DEVIATION sparse_oblique_weights:BINARY categorical_algorithm:RANDOM winner_take_all:true max_depth:30 min_examples:1 }
+Step #80 score:0.820225 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:3 sparse_oblique_normalization:MIN_MAX sparse_oblique_weights:BINARY categorical_algorithm:CART winner_take_all:true max_depth:16 min_examples:1 }
+Step #81 score:0.806180 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:5 sparse_oblique_normalization:STANDARD_DEVIATION sparse_oblique_weights:CONTINUOUS categorical_algorithm:CART winner_take_all:true max_depth:20 min_examples:1 }
+Step #82 score:0.828652 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:2 sparse_oblique_normalization:STANDARD_DEVIATION sparse_oblique_weights:BINARY categorical_algorithm:CART winner_take_all:true max_depth:12 min_examples:40 }
+Step #83 score:0.834270 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:1 sparse_oblique_normalization:STANDARD_DEVIATION sparse_oblique_weights:BINARY categorical_algorithm:CART winner_take_all:true max_depth:12 min_examples:1 }
+Step #84 score:0.844101 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:2 sparse_oblique_normalization:MIN_MAX sparse_oblique_weights:BINARY categorical_algorithm:CART winner_take_all:true max_depth:16 min_examples:10 }
+Step #85 score:0.828652 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:3 sparse_oblique_normalization:MIN_MAX sparse_oblique_weights:CONTINUOUS categorical_algorithm:RANDOM winner_take_all:true max_depth:25 min_examples:40 }
+Step #86 score:0.830056 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:5 sparse_oblique_normalization:MIN_MAX sparse_oblique_weights:CONTINUOUS categorical_algorithm:CART winner_take_all:true max_depth:12 min_examples:40 }
+Step #87 score:0.830056 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:5 sparse_oblique_normalization:MIN_MAX sparse_oblique_weights:CONTINUOUS categorical_algorithm:RANDOM winner_take_all:true max_depth:30 min_examples:40 }
+Step #88 score:0.821629 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:4 sparse_oblique_normalization:STANDARD_DEVIATION sparse_oblique_weights:BINARY categorical_algorithm:RANDOM winner_take_all:true max_depth:30 min_examples:2 }
+Step #89 score:0.838483 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:5 sparse_oblique_normalization:MIN_MAX sparse_oblique_weights:BINARY categorical_algorithm:RANDOM winner_take_all:true max_depth:25 min_examples:40 }
+Step #90 score:0.827247 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:3 sparse_oblique_normalization:NONE sparse_oblique_weights:BINARY categorical_algorithm:RANDOM winner_take_all:true max_depth:12 min_examples:40 }
+Step #91 score:0.834270 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:3 sparse_oblique_normalization:STANDARD_DEVIATION sparse_oblique_weights:BINARY categorical_algorithm:RANDOM winner_take_all:true max_depth:12 min_examples:1 }
+Step #92 score:0.838483 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:5 sparse_oblique_normalization:MIN_MAX sparse_oblique_weights:BINARY categorical_algorithm:CART winner_take_all:true max_depth:25 min_examples:40 }
+Step #93 score:0.838483 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:3 sparse_oblique_normalization:MIN_MAX sparse_oblique_weights:BINARY categorical_algorithm:CART winner_take_all:true max_depth:12 min_examples:2 }
+Step #94 score:0.811798 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:5 sparse_oblique_normalization:STANDARD_DEVIATION sparse_oblique_weights:BINARY categorical_algorithm:CART winner_take_all:true max_depth:25 min_examples:1 }
+Step #95 score:0.825843 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:2 sparse_oblique_normalization:MIN_MAX sparse_oblique_weights:CONTINUOUS categorical_algorithm:CART winner_take_all:true max_depth:25 min_examples:2 }
+Step #96 score:0.830056 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:5 sparse_oblique_normalization:MIN_MAX sparse_oblique_weights:CONTINUOUS categorical_algorithm:CART winner_take_all:true max_depth:30 min_examples:40 }
+Step #97 score:0.837079 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:4 sparse_oblique_normalization:STANDARD_DEVIATION sparse_oblique_weights:CONTINUOUS categorical_algorithm:RANDOM winner_take_all:true max_depth:25 min_examples:5 }
+Step #98 score:0.835674 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:3 sparse_oblique_normalization:NONE sparse_oblique_weights:CONTINUOUS categorical_algorithm:RANDOM winner_take_all:true max_depth:25 min_examples:5 }
+Step #99 score:0.813202 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:5 sparse_oblique_normalization:STANDARD_DEVIATION sparse_oblique_weights:BINARY categorical_algorithm:CART winner_take_all:true max_depth:16 min_examples:1 }
+Step #100 score:0.824438 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:2 sparse_oblique_normalization:NONE sparse_oblique_weights:BINARY categorical_algorithm:RANDOM winner_take_all:true max_depth:12 min_examples:40 }
+Step #101 score:0.838483 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:5 sparse_oblique_normalization:NONE sparse_oblique_weights:CONTINUOUS categorical_algorithm:CART winner_take_all:true max_depth:16 min_examples:10 }
+Step #102 score:0.825843 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:2 sparse_oblique_normalization:NONE sparse_oblique_weights:BINARY categorical_algorithm:CART winner_take_all:true max_depth:20 min_examples:2 }
+Step #103 score:0.830056 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:5 sparse_oblique_normalization:MIN_MAX sparse_oblique_weights:CONTINUOUS categorical_algorithm:RANDOM winner_take_all:true max_depth:20 min_examples:40 }
+Step #104 score:0.820225 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:4 sparse_oblique_normalization:STANDARD_DEVIATION sparse_oblique_weights:CONTINUOUS categorical_algorithm:CART winner_take_all:true max_depth:30 min_examples:1 }
+Step #105 score:0.848315 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:2 sparse_oblique_normalization:STANDARD_DEVIATION sparse_oblique_weights:BINARY categorical_algorithm:CART winner_take_all:true max_depth:12 min_examples:5 }
+Step #106 score:0.838483 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:4 sparse_oblique_normalization:MIN_MAX sparse_oblique_weights:CONTINUOUS categorical_algorithm:RANDOM winner_take_all:true max_depth:25 min_examples:5 }
+Step #107 score:0.842697 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:2 sparse_oblique_normalization:STANDARD_DEVIATION sparse_oblique_weights:CONTINUOUS categorical_algorithm:CART winner_take_all:true max_depth:25 min_examples:10 }
+Step #108 score:0.844101 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:3 sparse_oblique_normalization:STANDARD_DEVIATION sparse_oblique_weights:CONTINUOUS categorical_algorithm:RANDOM winner_take_all:true max_depth:25 min_examples:10 }
+Step #109 score:0.844101 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:2 sparse_oblique_normalization:STANDARD_DEVIATION sparse_oblique_weights:CONTINUOUS categorical_algorithm:RANDOM winner_take_all:true max_depth:12 min_examples:5 }
+Step #110 score:0.827247 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:2 sparse_oblique_normalization:NONE sparse_oblique_weights:CONTINUOUS categorical_algorithm:CART winner_take_all:true max_depth:25 min_examples:40 }
+Step #111 score:0.831461 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:5 sparse_oblique_normalization:NONE sparse_oblique_weights:BINARY categorical_algorithm:RANDOM winner_take_all:true max_depth:25 min_examples:10 }
+Step #112 score:0.835674 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:5 sparse_oblique_normalization:NONE sparse_oblique_weights:BINARY categorical_algorithm:CART winner_take_all:true max_depth:25 min_examples:5 }
+Step #113 score:0.827247 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:2 sparse_oblique_normalization:STANDARD_DEVIATION sparse_oblique_weights:BINARY categorical_algorithm:RANDOM winner_take_all:true max_depth:12 min_examples:2 }
+Step #114 score:0.825843 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:2 sparse_oblique_normalization:NONE sparse_oblique_weights:BINARY categorical_algorithm:RANDOM winner_take_all:true max_depth:12 min_examples:1 }
+Step #115 score:0.818820 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:3 sparse_oblique_normalization:STANDARD_DEVIATION sparse_oblique_weights:CONTINUOUS categorical_algorithm:CART winner_take_all:true max_depth:16 min_examples:1 }
+Step #116 score:0.828652 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:1 sparse_oblique_normalization:STANDARD_DEVIATION sparse_oblique_weights:BINARY categorical_algorithm:CART winner_take_all:true max_depth:30 min_examples:40 }
+Step #117 score:0.828652 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:2 sparse_oblique_normalization:STANDARD_DEVIATION sparse_oblique_weights:CONTINUOUS categorical_algorithm:CART winner_take_all:true max_depth:12 min_examples:2 }
+Step #118 score:0.837079 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:4 sparse_oblique_normalization:STANDARD_DEVIATION sparse_oblique_weights:CONTINUOUS categorical_algorithm:RANDOM winner_take_all:true max_depth:30 min_examples:5 }
+Step #119 score:0.808989 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:5 sparse_oblique_normalization:STANDARD_DEVIATION sparse_oblique_weights:CONTINUOUS categorical_algorithm:RANDOM winner_take_all:true max_depth:30 min_examples:1 }
+Step #120 score:0.814607 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:3 sparse_oblique_normalization:STANDARD_DEVIATION sparse_oblique_weights:BINARY categorical_algorithm:CART winner_take_all:true max_depth:20 min_examples:1 }
+Step #121 score:0.839888 parameters:{ split_axis:AXIS_ALIGNED categorical_algorithm:RANDOM winner_take_all:true max_depth:16 min_examples:1 }
+Step #122 score:0.828652 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:2 sparse_oblique_normalization:STANDARD_DEVIATION sparse_oblique_weights:CONTINUOUS categorical_algorithm:RANDOM winner_take_all:true max_depth:30 min_examples:2 }
+Step #123 score:0.837079 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:3 sparse_oblique_normalization:NONE sparse_oblique_weights:CONTINUOUS categorical_algorithm:CART winner_take_all:true max_depth:16 min_examples:5 }
+Step #124 score:0.838483 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:3 sparse_oblique_normalization:MIN_MAX sparse_oblique_weights:BINARY categorical_algorithm:RANDOM winner_take_all:true max_depth:20 min_examples:5 }
+Step #125 score:0.820225 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:1 sparse_oblique_normalization:STANDARD_DEVIATION sparse_oblique_weights:CONTINUOUS categorical_algorithm:RANDOM winner_take_all:true max_depth:25 min_examples:1 }
+Step #126 score:0.830056 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:5 sparse_oblique_normalization:STANDARD_DEVIATION sparse_oblique_weights:BINARY categorical_algorithm:CART winner_take_all:true max_depth:25 min_examples:40 }
+Step #127 score:0.842697 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:5 sparse_oblique_normalization:STANDARD_DEVIATION sparse_oblique_weights:CONTINUOUS categorical_algorithm:RANDOM winner_take_all:true max_depth:20 min_examples:10 }
+Step #128 score:0.811798 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:2 sparse_oblique_normalization:NONE sparse_oblique_weights:CONTINUOUS categorical_algorithm:RANDOM winner_take_all:true max_depth:30 min_examples:1 }
+Step #129 score:0.827247 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:2 sparse_oblique_normalization:STANDARD_DEVIATION sparse_oblique_weights:BINARY categorical_algorithm:CART winner_take_all:true max_depth:16 min_examples:2 }
+Step #130 score:0.838483 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:3 sparse_oblique_normalization:MIN_MAX sparse_oblique_weights:CONTINUOUS categorical_algorithm:RANDOM winner_take_all:true max_depth:30 min_examples:10 }
+Step #131 score:0.831461 parameters:{ split_axis:AXIS_ALIGNED categorical_algorithm:CART winner_take_all:true max_depth:20 min_examples:10 }
+Step #132 score:0.841292 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:2 sparse_oblique_normalization:MIN_MAX sparse_oblique_weights:CONTINUOUS categorical_algorithm:RANDOM winner_take_all:true max_depth:25 min_examples:10 }
+Step #133 score:0.838483 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:3 sparse_oblique_normalization:MIN_MAX sparse_oblique_weights:BINARY categorical_algorithm:RANDOM winner_take_all:true max_depth:30 min_examples:5 }
+Step #134 score:0.814607 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:2 sparse_oblique_normalization:NONE sparse_oblique_weights:BINARY categorical_algorithm:CART winner_take_all:true max_depth:30 min_examples:1 }
+Step #135 score:0.841292 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:2 sparse_oblique_normalization:NONE sparse_oblique_weights:BINARY categorical_algorithm:CART winner_take_all:true max_depth:12 min_examples:10 }
+Step #136 score:0.811798 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:5 sparse_oblique_normalization:MIN_MAX sparse_oblique_weights:BINARY categorical_algorithm:CART winner_take_all:true max_depth:30 min_examples:1 }
+Step #137 score:0.823034 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:2 sparse_oblique_normalization:NONE sparse_oblique_weights:BINARY categorical_algorithm:RANDOM winner_take_all:true max_depth:16 min_examples:2 }
+Step #138 score:0.839888 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:5 sparse_oblique_normalization:NONE sparse_oblique_weights:CONTINUOUS categorical_algorithm:RANDOM winner_take_all:true max_depth:20 min_examples:10 }
+Step #139 score:0.831461 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:1 sparse_oblique_normalization:STANDARD_DEVIATION sparse_oblique_weights:BINARY categorical_algorithm:CART winner_take_all:true max_depth:30 min_examples:2 }
+Step #140 score:0.821629 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:1 sparse_oblique_normalization:NONE sparse_oblique_weights:BINARY categorical_algorithm:RANDOM winner_take_all:true max_depth:12 min_examples:40 }
+Step #141 score:0.834270 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:3 sparse_oblique_normalization:STANDARD_DEVIATION sparse_oblique_weights:BINARY categorical_algorithm:CART winner_take_all:true max_depth:12 min_examples:1 }
+Step #142 score:0.846910 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:3 sparse_oblique_normalization:MIN_MAX sparse_oblique_weights:BINARY categorical_algorithm:CART winner_take_all:true max_depth:12 min_examples:5 }
+Step #143 score:0.828652 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:3 sparse_oblique_normalization:STANDARD_DEVIATION sparse_oblique_weights:CONTINUOUS categorical_algorithm:CART winner_take_all:true max_depth:20 min_examples:40 }
+Step #144 score:0.842697 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:5 sparse_oblique_normalization:MIN_MAX sparse_oblique_weights:BINARY categorical_algorithm:RANDOM winner_take_all:true max_depth:12 min_examples:10 }
+Step #145 score:0.835674 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:3 sparse_oblique_normalization:NONE sparse_oblique_weights:CONTINUOUS categorical_algorithm:RANDOM winner_take_all:true max_depth:30 min_examples:5 }
+Step #146 score:0.789326 parameters:{ split_axis:AXIS_ALIGNED categorical_algorithm:CART winner_take_all:true max_depth:12 min_examples:40 }
+Step #147 score:0.844101 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:4 sparse_oblique_normalization:MIN_MAX sparse_oblique_weights:BINARY categorical_algorithm:CART winner_take_all:true max_depth:30 min_examples:10 }
+Step #148 score:0.811798 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:5 sparse_oblique_normalization:MIN_MAX sparse_oblique_weights:BINARY categorical_algorithm:RANDOM winner_take_all:true max_depth:30 min_examples:1 }
+Step #149 score:0.830056 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:1 sparse_oblique_normalization:MIN_MAX sparse_oblique_weights:BINARY categorical_algorithm:CART winner_take_all:true max_depth:25 min_examples:2 }
+Step #150 score:0.821629 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:1 sparse_oblique_normalization:NONE sparse_oblique_weights:BINARY categorical_algorithm:CART winner_take_all:true max_depth:16 min_examples:40 }
+Step #151 score:0.835674 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:3 sparse_oblique_normalization:MIN_MAX sparse_oblique_weights:BINARY categorical_algorithm:RANDOM winner_take_all:true max_depth:20 min_examples:10 }
+Step #152 score:0.841292 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:3 sparse_oblique_normalization:NONE sparse_oblique_weights:BINARY categorical_algorithm:CART winner_take_all:true max_depth:20 min_examples:10 }
+Step #153 score:0.832865 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:4 sparse_oblique_normalization:NONE sparse_oblique_weights:BINARY categorical_algorithm:RANDOM winner_take_all:true max_depth:12 min_examples:40 }
+Step #154 score:0.825843 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:5 sparse_oblique_normalization:MIN_MAX sparse_oblique_weights:CONTINUOUS categorical_algorithm:CART winner_take_all:true max_depth:12 min_examples:1 }
+Step #155 score:0.838483 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:3 sparse_oblique_normalization:MIN_MAX sparse_oblique_weights:BINARY categorical_algorithm:CART winner_take_all:true max_depth:12 min_examples:10 }
+Step #156 score:0.820225 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:4 sparse_oblique_normalization:STANDARD_DEVIATION sparse_oblique_weights:CONTINUOUS categorical_algorithm:RANDOM winner_take_all:true max_depth:25 min_examples:1 }
+Step #157 score:0.835674 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:4 sparse_oblique_normalization:NONE sparse_oblique_weights:CONTINUOUS categorical_algorithm:RANDOM winner_take_all:true max_depth:12 min_examples:2 }
+Step #158 score:0.825843 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:4 sparse_oblique_normalization:MIN_MAX sparse_oblique_weights:CONTINUOUS categorical_algorithm:CART winner_take_all:true max_depth:12 min_examples:40 }
+Step #159 score:0.837079 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:2 sparse_oblique_normalization:STANDARD_DEVIATION sparse_oblique_weights:BINARY categorical_algorithm:CART winner_take_all:true max_depth:20 min_examples:5 }
+Step #160 score:0.823034 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:5 sparse_oblique_normalization:NONE sparse_oblique_weights:BINARY categorical_algorithm:RANDOM winner_take_all:true max_depth:12 min_examples:1 }
+Step #161 score:0.839888 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:3 sparse_oblique_normalization:STANDARD_DEVIATION sparse_oblique_weights:BINARY categorical_algorithm:CART winner_take_all:true max_depth:30 min_examples:5 }
+Step #162 score:0.814607 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:2 sparse_oblique_normalization:MIN_MAX sparse_oblique_weights:BINARY categorical_algorithm:CART winner_take_all:true max_depth:20 min_examples:1 }
+Step #163 score:0.811798 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:3 sparse_oblique_normalization:NONE sparse_oblique_weights:BINARY categorical_algorithm:RANDOM winner_take_all:true max_depth:30 min_examples:1 }
+Step #164 score:0.811798 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:5 sparse_oblique_normalization:NONE sparse_oblique_weights:CONTINUOUS categorical_algorithm:RANDOM winner_take_all:true max_depth:25 min_examples:1 }
+Step #165 score:0.844101 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:4 sparse_oblique_normalization:MIN_MAX sparse_oblique_weights:BINARY categorical_algorithm:RANDOM winner_take_all:true max_depth:20 min_examples:5 }
+Step #166 score:0.832865 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:4 sparse_oblique_normalization:NONE sparse_oblique_weights:BINARY categorical_algorithm:CART winner_take_all:true max_depth:25 min_examples:40 }
+Step #167 score:0.839888 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:3 sparse_oblique_normalization:MIN_MAX sparse_oblique_weights:BINARY categorical_algorithm:RANDOM winner_take_all:true max_depth:16 min_examples:10 }
+Step #168 score:0.827247 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:1 sparse_oblique_normalization:MIN_MAX sparse_oblique_weights:CONTINUOUS categorical_algorithm:RANDOM winner_take_all:true max_depth:20 min_examples:40 }
+Step #169 score:0.839888 parameters:{ split_axis:AXIS_ALIGNED categorical_algorithm:RANDOM winner_take_all:true max_depth:16 min_examples:2 }
+Step #170 score:0.842697 parameters:{ split_axis:AXIS_ALIGNED categorical_algorithm:CART winner_take_all:true max_depth:16 min_examples:5 }
+Step #171 score:0.832865 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:4 sparse_oblique_normalization:NONE sparse_oblique_weights:BINARY categorical_algorithm:CART winner_take_all:true max_depth:16 min_examples:40 }
+Step #172 score:0.813202 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:5 sparse_oblique_normalization:NONE sparse_oblique_weights:BINARY categorical_algorithm:RANDOM winner_take_all:true max_depth:20 min_examples:1 }
+Step #173 score:0.828652 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:2 sparse_oblique_normalization:MIN_MAX sparse_oblique_weights:BINARY categorical_algorithm:RANDOM winner_take_all:true max_depth:12 min_examples:1 }
+Step #174 score:0.842697 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:2 sparse_oblique_normalization:MIN_MAX sparse_oblique_weights:CONTINUOUS categorical_algorithm:CART winner_take_all:true max_depth:20 min_examples:10 }
+Step #175 score:0.827247 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:3 sparse_oblique_normalization:STANDARD_DEVIATION sparse_oblique_weights:BINARY categorical_algorithm:CART winner_take_all:true max_depth:25 min_examples:2 }
+Step #176 score:0.789326 parameters:{ split_axis:AXIS_ALIGNED categorical_algorithm:RANDOM winner_take_all:true max_depth:20 min_examples:40 }
+Step #177 score:0.824438 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:3 sparse_oblique_normalization:NONE sparse_oblique_weights:CONTINUOUS categorical_algorithm:RANDOM winner_take_all:true max_depth:20 min_examples:2 }
+Step #178 score:0.838483 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:1 sparse_oblique_normalization:STANDARD_DEVIATION sparse_oblique_weights:BINARY categorical_algorithm:RANDOM winner_take_all:true max_depth:25 min_examples:10 }
+Step #179 score:0.828652 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:3 sparse_oblique_normalization:STANDARD_DEVIATION sparse_oblique_weights:CONTINUOUS categorical_algorithm:CART winner_take_all:true max_depth:25 min_examples:40 }
+Step #180 score:0.841292 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:4 sparse_oblique_normalization:MIN_MAX sparse_oblique_weights:CONTINUOUS categorical_algorithm:RANDOM winner_take_all:true max_depth:25 min_examples:10 }
+Step #181 score:0.817416 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:5 sparse_oblique_normalization:STANDARD_DEVIATION sparse_oblique_weights:BINARY categorical_algorithm:RANDOM winner_take_all:true max_depth:16 min_examples:2 }
+Step #182 score:0.842697 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:4 sparse_oblique_normalization:STANDARD_DEVIATION sparse_oblique_weights:BINARY categorical_algorithm:CART winner_take_all:true max_depth:12 min_examples:5 }
+Step #183 score:0.837079 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:5 sparse_oblique_normalization:MIN_MAX sparse_oblique_weights:CONTINUOUS categorical_algorithm:CART winner_take_all:true max_depth:16 min_examples:5 }
+Step #184 score:0.828652 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:1 sparse_oblique_normalization:MIN_MAX sparse_oblique_weights:CONTINUOUS categorical_algorithm:CART winner_take_all:true max_depth:16 min_examples:2 }
+Step #185 score:0.844101 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:5 sparse_oblique_normalization:MIN_MAX sparse_oblique_weights:CONTINUOUS categorical_algorithm:RANDOM winner_take_all:true max_depth:16 min_examples:10 }
+Step #186 score:0.839888 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:5 sparse_oblique_normalization:STANDARD_DEVIATION sparse_oblique_weights:CONTINUOUS categorical_algorithm:CART winner_take_all:true max_depth:16 min_examples:10 }
+Step #187 score:0.841292 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:4 sparse_oblique_normalization:MIN_MAX sparse_oblique_weights:BINARY categorical_algorithm:RANDOM winner_take_all:true max_depth:30 min_examples:5 }
+Step #188 score:0.839888 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:2 sparse_oblique_normalization:NONE sparse_oblique_weights:BINARY categorical_algorithm:RANDOM winner_take_all:true max_depth:30 min_examples:10 }
+Step #189 score:0.844101 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:4 sparse_oblique_normalization:MIN_MAX sparse_oblique_weights:BINARY categorical_algorithm:RANDOM winner_take_all:true max_depth:25 min_examples:10 }
+Step #190 score:0.824438 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:4 sparse_oblique_normalization:STANDARD_DEVIATION sparse_oblique_weights:BINARY categorical_algorithm:CART winner_take_all:true max_depth:12 min_examples:1 }
+Step #191 score:0.813202 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:1 sparse_oblique_normalization:NONE sparse_oblique_weights:CONTINUOUS categorical_algorithm:CART winner_take_all:true max_depth:30 min_examples:1 }
+Step #192 score:0.837079 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:3 sparse_oblique_normalization:NONE sparse_oblique_weights:CONTINUOUS categorical_algorithm:CART winner_take_all:true max_depth:20 min_examples:5 }
+Step #193 score:0.841292 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:2 sparse_oblique_normalization:NONE sparse_oblique_weights:CONTINUOUS categorical_algorithm:RANDOM winner_take_all:true max_depth:30 min_examples:10 }
+Step #194 score:0.834270 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:1 sparse_oblique_normalization:NONE sparse_oblique_weights:CONTINUOUS categorical_algorithm:CART winner_take_all:true max_depth:20 min_examples:10 }
+Step #195 score:0.821629 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:4 sparse_oblique_normalization:NONE sparse_oblique_weights:BINARY categorical_algorithm:CART winner_take_all:true max_depth:25 min_examples:2 }
+Step #196 score:0.838483 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:2 sparse_oblique_normalization:STANDARD_DEVIATION sparse_oblique_weights:CONTINUOUS categorical_algorithm:RANDOM winner_take_all:true max_depth:12 min_examples:10 }
+Step #197 score:0.827247 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:2 sparse_oblique_normalization:NONE sparse_oblique_weights:CONTINUOUS categorical_algorithm:CART winner_take_all:true max_depth:20 min_examples:2 }
+Step #198 score:0.830056 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:5 sparse_oblique_normalization:STANDARD_DEVIATION sparse_oblique_weights:BINARY categorical_algorithm:CART winner_take_all:true max_depth:20 min_examples:5 }
+Step #199 score:0.816011 parameters:{ split_axis:SPARSE_OBLIQUE sparse_oblique_projection_density_factor:3 sparse_oblique_normalization:STANDARD_DEVIATION sparse_oblique_weights:BINARY categorical_algorithm:CART winner_take_all:true max_depth:25 min_examples:1 }
+
+
+Winner takes all: true
+Out-of-bag evaluation: accuracy:0.848315 logloss:0.705043
+Number of trees: 300
+Total number of nodes: 26676
+
+Number of nodes by tree:
+Count: 300 Average: 88.92 StdDev: 10.0117
+Min: 61 Max: 113 Ignored: 0
+----------------------------------------------
+[  61,  63)  2   0.67%   0.67%
+[  63,  66)  4   1.33%   2.00% #
+[  66,  68)  2   0.67%   2.67%
+[  68,  71)  3   1.00%   3.67% #
+[  71,  74) 18   6.00%   9.67% ###
+[  74,  76)  5   1.67%  11.33% #
+[  76,  79) 11   3.67%  15.00% ##
+[  79,  82) 29   9.67%  24.67% ######
+[  82,  84) 18   6.00%  30.67% ###
+[  84,  87) 14   4.67%  35.33% ###
+[  87,  90) 52  17.33%  52.67% ##########
+[  90,  92) 14   4.67%  57.33% ###
+[  92,  95) 27   9.00%  66.33% #####
+[  95,  98) 46  15.33%  81.67% #########
+[  98, 100) 15   5.00%  86.67% ###
+[ 100, 103) 16   5.33%  92.00% ###
+[ 103, 106) 14   4.67%  96.67% ###
+[ 106, 108)  7   2.33%  99.00% #
+[ 108, 111)  1   0.33%  99.33%
+[ 111, 113]  2   0.67% 100.00%
+
+Depth by leafs:
+Count: 13488 Average: 7.06065 StdDev: 2.31659
+Min: 2 Max: 11 Ignored: 0
+----------------------------------------------
+[  2,  3)  132   0.98%   0.98% #
+[  3,  4)  557   4.13%   5.11% ###
+[  4,  5) 1280   9.49%  14.60% ######
+[  5,  6) 1896  14.06%  28.66% #########
+[  6,  7) 1995  14.79%  43.45% ##########
+[  7,  8) 1996  14.80%  58.24% ##########
+[  8,  9) 1749  12.97%  71.21% #########
+[  9, 10) 1441  10.68%  81.90% #######
+[ 10, 11) 1066   7.90%  89.80% #####
+[ 11, 11] 1376  10.20% 100.00% #######
+
+Number of training obs by leaf:
+Count: 13488 Average: 15.8363 StdDev: 20.4735
+Min: 5 Max: 193 Ignored: 0
+----------------------------------------------
+[   5,  14) 9653  71.57%  71.57% ##########
+[  14,  23) 1478  10.96%  82.53% ##
+[  23,  33)  816   6.05%  88.58% #
+[  33,  42)  379   2.81%  91.38%
+[  42,  52)  288   2.14%  93.52%
+[  52,  61)  178   1.32%  94.84%
+[  61,  71)  171   1.27%  96.11%
+[  71,  80)  121   0.90%  97.00%
+[  80,  90)  122   0.90%  97.91%
+[  90,  99)   92   0.68%  98.59%
+[  99, 108)   79   0.59%  99.18%
+[ 108, 118)   51   0.38%  99.56%
+[ 118, 127)   23   0.17%  99.73%
+[ 127, 137)   13   0.10%  99.82%
+[ 137, 146)    4   0.03%  99.85%
+[ 146, 156)    7   0.05%  99.90%
+[ 156, 165)    2   0.01%  99.92%
+[ 165, 175)    3   0.02%  99.94%
+[ 175, 184)    2   0.01%  99.96%
+[ 184, 193]    6   0.04% 100.00%
+
+Attribute in nodes:
+	7763 : Age [NUMERICAL]
+	3464 : Fare [NUMERICAL]
+	1517 : FamilySize [NUMERICAL]
+	197 : Pclass [NUMERICAL]
+	93 : FemaleFirstClass [NUMERICAL]
+	73 : Parch [NUMERICAL]
+	51 : IsAlone [NUMERICAL]
+	15 : Sex_female [NUMERICAL]
+	8 : SibSp [NUMERICAL]
+	7 : Sex_male [NUMERICAL]
+
+Attribute in nodes with depth <= 0:
+	111 : FamilySize [NUMERICAL]
+	87 : Pclass [NUMERICAL]
+	43 : Age [NUMERICAL]
+	21 : Fare [NUMERICAL]
+	16 : FemaleFirstClass [NUMERICAL]
+	8 : Sex_female [NUMERICAL]
+	7 : Parch [NUMERICAL]
+	4 : Sex_male [NUMERICAL]
+	3 : IsAlone [NUMERICAL]
+
+Attribute in nodes with depth <= 1:
+	319 : Age [NUMERICAL]
+	182 : FamilySize [NUMERICAL]
+	178 : Fare [NUMERICAL]
+	152 : Pclass [NUMERICAL]
+	31 : FemaleFirstClass [NUMERICAL]
+	15 : Parch [NUMERICAL]
+	10 : Sex_female [NUMERICAL]
+	9 : IsAlone [NUMERICAL]
+	4 : Sex_male [NUMERICAL]
+
+Attribute in nodes with depth <= 2:
+	909 : Age [NUMERICAL]
+	427 : Fare [NUMERICAL]
+	367 : FamilySize [NUMERICAL]
+	167 : Pclass [NUMERICAL]
+	45 : FemaleFirstClass [NUMERICAL]
+	25 : Parch [NUMERICAL]
+	14 : IsAlone [NUMERICAL]
+	10 : Sex_female [NUMERICAL]
+	4 : Sex_male [NUMERICAL]
+
+Attribute in nodes with depth <= 3:
+	1825 : Age [NUMERICAL]
+	836 : Fare [NUMERICAL]
+	576 : FamilySize [NUMERICAL]
+	175 : Pclass [NUMERICAL]
+	58 : FemaleFirstClass [NUMERICAL]
+	38 : Parch [NUMERICAL]
+	23 : IsAlone [NUMERICAL]
+	10 : Sex_female [NUMERICAL]
+	5 : Sex_male [NUMERICAL]
+	1 : SibSp [NUMERICAL]
+
+Attribute in nodes with depth <= 5:
+	4064 : Age [NUMERICAL]
+	1847 : Fare [NUMERICAL]
+	976 : FamilySize [NUMERICAL]
+	189 : Pclass [NUMERICAL]
+	83 : FemaleFirstClass [NUMERICAL]
+	61 : Parch [NUMERICAL]
+	39 : IsAlone [NUMERICAL]
+	13 : Sex_female [NUMERICAL]
+	7 : SibSp [NUMERICAL]
+	6 : Sex_male [NUMERICAL]
+
+Condition type in nodes:
+	13188 : ObliqueCondition
+Condition type in nodes with depth <= 0:
+	300 : ObliqueCondition
+Condition type in nodes with depth <= 1:
+	900 : ObliqueCondition
+Condition type in nodes with depth <= 2:
+	1968 : ObliqueCondition
+Condition type in nodes with depth <= 3:
+	3547 : ObliqueCondition
+Condition type in nodes with depth <= 5:
+	7285 : ObliqueCondition
+Node format: NOT_SET
+
+Training OOB:
+	trees: 1, Out-of-bag evaluation: accuracy:0.760618 logloss:8.62821
+	trees: 11, Out-of-bag evaluation: accuracy:0.812412 logloss:3.40502
+	trees: 21, Out-of-bag evaluation: accuracy:0.81882 logloss:2.1478
+	trees: 31, Out-of-bag evaluation: accuracy:0.828652 logloss:1.48661
+	trees: 41, Out-of-bag evaluation: accuracy:0.83427 logloss:1.34826
+	trees: 51, Out-of-bag evaluation: accuracy:0.831461 logloss:1.30281
+	trees: 61, Out-of-bag evaluation: accuracy:0.835674 logloss:1.30651
+	trees: 71, Out-of-bag evaluation: accuracy:0.83427 logloss:1.0816
+	trees: 81, Out-of-bag evaluation: accuracy:0.837079 logloss:1.03105
+	trees: 91, Out-of-bag evaluation: accuracy:0.839888 logloss:0.891017
+	trees: 101, Out-of-bag evaluation: accuracy:0.837079 logloss:0.845815
+	trees: 111, Out-of-bag evaluation: accuracy:0.844101 logloss:0.796817
+	trees: 121, Out-of-bag evaluation: accuracy:0.838483 logloss:0.796562
+	trees: 131, Out-of-bag evaluation: accuracy:0.842697 logloss:0.795373
+	trees: 141, Out-of-bag evaluation: accuracy:0.841292 logloss:0.750476
+	trees: 151, Out-of-bag evaluation: accuracy:0.841292 logloss:0.752962
+	trees: 161, Out-of-bag evaluation: accuracy:0.842697 logloss:0.754785
+	trees: 171, Out-of-bag evaluation: accuracy:0.839888 logloss:0.754357
+	trees: 181, Out-of-bag evaluation: accuracy:0.842697 logloss:0.709733
+	trees: 191, Out-of-bag evaluation: accuracy:0.845506 logloss:0.70997
+	trees: 201, Out-of-bag evaluation: accuracy:0.84691 logloss:0.710643
+	trees: 211, Out-of-bag evaluation: accuracy:0.84691 logloss:0.710121
+	trees: 221, Out-of-bag evaluation: accuracy:0.848315 logloss:0.708884
+	trees: 231, Out-of-bag evaluation: accuracy:0.845506 logloss:0.709008
+	trees: 241, Out-of-bag evaluation: accuracy:0.84691 logloss:0.710486
+	trees: 251, Out-of-bag evaluation: accuracy:0.84691 logloss:0.709816
+	trees: 261, Out-of-bag evaluation: accuracy:0.848315 logloss:0.709804
+	trees: 271, Out-of-bag evaluation: accuracy:0.845506 logloss:0.708107
+	trees: 281, Out-of-bag evaluation: accuracy:0.848315 logloss:0.70677
+	trees: 291, Out-of-bag evaluation: accuracy:0.84691 logloss:0.705657
+	trees: 300, Out-of-bag evaluation: accuracy:0.848315 logloss:0.705043
+

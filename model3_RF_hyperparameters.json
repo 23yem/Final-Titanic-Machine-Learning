@@ -1,0 +1,1 @@
+{"score": 0.8483145833015442, "evaluation_time": 55.396154431, "best": true, "split_axis": "SPARSE_OBLIQUE", "sparse_oblique_projection_density_factor": 2.0, "sparse_oblique_normalization": "STANDARD_DEVIATION", "sparse_oblique_weights": "BINARY", "categorical_algorithm": "CART", "winner_take_all": "true", "max_depth": 12, "min_examples": 5}
