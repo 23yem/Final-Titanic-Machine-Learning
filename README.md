@@ -1,6 +1,4 @@
-# I wanted to learn how to run and submit machine learning models locally, so I decided to use VSCODE. I will test out to see if this is better than working on kaggle. 
 # titanic-neural-network (1).ipynb is the main file with the code
-
 
 ## Introduction
 This repository contains my work for the Kaggle Titanic survival prediction competition. The challenge is to use machine learning to create a model that predicts which passengers survived the Titanic shipwreck based on a range of features.
