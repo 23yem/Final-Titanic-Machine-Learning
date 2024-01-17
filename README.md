@@ -1,7 +1,7 @@
 # titanic-neural-network (1).ipynb is the main file with the code
 
 ## Introduction
-This repository contains my work for the Kaggle Titanic survival prediction competition. The challenge is to use machine learning to create a model that predicts which passengers survived the Titanic shipwreck based on a range of features.
+This is my first Machine Learning Project. This repository contains my work for the Kaggle Titanic survival prediction competition. The challenge is to use machine learning to create a model that predicts which passengers survived the Titanic shipwreck based on a range of features.
 
 ## Project Description
 The project employs a variety of machine learning models, including Random Forests, Gradient Boosted Trees, and Neural Networks, to predict survival. Techniques for data cleaning, feature engineering, and model tuning are thoroughly documented in the Jupyter notebooks.
