@@ -1,4 +1,7 @@
-# titanic-neural-network (1).ipynb is the main file with the code
+# Titanic - Machine Learning from Disaster
+---
+
+<img src="https://m.media-amazon.com/images/I/811lT7khIrL._AC_UF894,1000_QL80_.jpg" style="max-width: 700px; height: 673px; margin: 0px; width: 471px;" alt="Titanic-photo">
 
 ## Introduction
 This is my first Machine Learning Project. This repository contains my work for the Kaggle Titanic survival prediction competition. The challenge is to use machine learning to create a model that predicts which passengers survived the Titanic shipwreck based on a range of features.
