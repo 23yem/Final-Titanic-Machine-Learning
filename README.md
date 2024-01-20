@@ -6,6 +6,9 @@
 ## Introduction
 This is my first Machine Learning Project. This repository contains my work for the Kaggle Titanic survival prediction competition. The challenge is to use machine learning to create a model that predicts which passengers survived the Titanic shipwreck based on a range of features.
 
+## Portfolio Website
+I also made a [custom interactive website for this project](https://michael-ye-titanic-home.streamlit.app/), which describes the project, my techniques, and most importantly, I deployed my best models and allowed users to pass in values which are given to the model in the cloud and gives back predictions of survival to the user. Try it out at https://michael-ye-titanic-home.streamlit.app/ 
+
 ## Project Description
 The project employs a variety of machine learning models, including Random Forests, Gradient Boosted Trees, and Neural Networks, to predict survival. Techniques for data cleaning, feature engineering, and model tuning are thoroughly documented in the Jupyter notebooks.
 
